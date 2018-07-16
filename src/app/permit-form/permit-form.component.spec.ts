@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PermitsComponent } from './permits.component';
+import { PermitsComponent } from './permit-form.component';
 
 describe('PermitsComponent', () => {
   let component: PermitsComponent;

@@ -20,9 +20,13 @@ import { MatGridListModule, MatCardModule, MatMenuModule, MatIconModule, MatButt
 import { LayoutModule } from '@angular/cdk/layout';
 import { AdminNavComponent } from './admin-nav/admin-nav.component';
 import { UsersComponent } from './users/users.component';
-import { PermitsComponent } from './permits/permits.component';
 import { DivesComponent } from './dives/dives.component';
 import {AgGridModule} from 'ag-grid-angular';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {LeafletModule} from '@asymmetrik/ngx-leaflet';
+import {LeafletMarkerClusterModule} from '@asymmetrik/ngx-leaflet-markercluster';
+import {PermitService} from './services/permit.service';
+import {PermitFormComponent} from './permit-form/permit-form.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +35,7 @@ import {AgGridModule} from 'ag-grid-angular';
     DashboardComponent,
     AdminNavComponent,
     UsersComponent,
-    PermitsComponent,
+    PermitFormComponent,
     DivesComponent
   ],
   imports: [
@@ -54,12 +58,16 @@ import {AgGridModule} from 'ag-grid-angular';
     MatToolbarModule,
     MatSidenavModule,
     MatListModule,
-    AgGridModule.withComponents([])
+    NgbModule.forRoot(),
+    AgGridModule.withComponents([]),
+    LeafletModule.forRoot(),
+    LeafletMarkerClusterModule.forRoot(),
   ],
   entryComponents: [
 ],
   providers: [
     AuthGuard,
+    PermitService,
     UserService,
     {
       provide: HTTP_INTERCEPTORS,

@@ -30,6 +30,7 @@
     "@angular/router": "6.0.7",
     "@asymmetrik/ngx-leaflet": "^3.0.2",
     "@asymmetrik/ngx-leaflet-markercluster": "^1.0.0",
+    "@ng-bootstrap/ng-bootstrap": "^2.2.0",
     "@types/lodash": "^4.14.109",
     "@types/node": "^6.0.109",
     "ag-grid": "17.1.1",

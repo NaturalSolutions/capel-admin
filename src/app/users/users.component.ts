@@ -10,32 +10,38 @@ import {ColumnApi, GridApi, GridOptions} from 'ag-grid';
 export class UsersComponent implements OnInit {
   title = 'app';
   private gridOptions: GridOptions;
-  private icons: any;
-  public rowCount: string;
   private api: GridApi;
   private columnApi: ColumnApi;
-  private columnDefs = [
-    {headerName: 'Id', field: 'id', checkboxSelection: true },
-    {headerName: 'Status', field: 'status'},
-    {headerName: 'Nom', field: 'firstname' },
-    {headerName: 'Prénom', field: 'lastname'},
-    {headerName: 'Catégorie', field: 'category'},
-    {headerName: 'Email', field: 'email'},
-    {headerName: 'Addresse', field: 'address'}
-  ];
-
+  private columnDefs;
+  private defaultColDef;
   private rowData = [];
   constructor(private userService: UserService) {
     this.gridOptions = <GridOptions>{};
+    this.defaultColDef = {
+      editable: true
+    };
+    this.columnDefs = [
+      {headerName: 'Id', field: 'id', checkboxSelection: true },
+      {headerName: 'Status', field: 'status', cellClassRules: {
+          'rag-green-outer': function(params) { return params.value === 'enabled' },
+          'rag-amber-outer': function(params) { return params.value === 'draft' },
+          'rag-red-outer': function(params) { return params.value === 'blocked' }
+        },
+        cellRenderer: function(params) {
+          return '<span class="rag-element">' + params.value + '</span>';
+        }
+      },
+      {headerName: 'Nom', field: 'firstname' },
+      {headerName: 'Prénom', field: 'lastname'},
+      {headerName: 'Catégorie', field: 'category'},
+      {headerName: 'Email', field: 'email', cellStyle: { backgroundColor: "#aaffaa" }},
+      {headerName: 'Addresse', field: 'address'}
+    ];
   }
   deleteUsers() {
     const selectedNodes = this.api.getSelectedNodes();
     const selectedData = selectedNodes.map( node => node.data );
-    //const selectedDataStringPresentation = selectedData.map( node => node.make + ' ' + node.model).join(', ');
-    console.log(selectedData);
-    //alert(`Selected nodes: ${selectedDataStringPresentation}`);
     this.userService.delete(selectedData).then(data => {
-      console.log(data);
       this.setUser();
     });
   }
@@ -44,29 +50,31 @@ export class UsersComponent implements OnInit {
     const selectedData = selectedNodes.map( node => node.data );
     const users = [];
     for ( const dataUser of selectedData )
-        users.push( {id: dataUser.id, status: 'blocked', boats: [] } )
+        users.push( {id: dataUser.id, status: 'blocked', boats: [] });
     this.userService.patch(users).then(data => {
       console.log(data);
       this.setUser();
-    })
+    });
   }
-  unblockUsers(){
+  unblockUsers() {
     const selectedNodes = this.api.getSelectedNodes();
     const selectedData = selectedNodes.map( node => node.data );
     const users = [];
     for ( const dataUser of selectedData )
-      users.push( {id: dataUser.id, status: 'enabled', boats: [] } )
+      users.push( {id: dataUser.id, status: 'enabled', boats: [] });
     this.userService.patch(users).then(data => {
       console.log(data);
       this.setUser();
-    })
+    });
   }
   private onReady(params) {
     this.api = params.api;
     this.columnApi = params.columnApi;
+    this.setUser();
+
   }
   ngOnInit() {
-    this.setUser();
+
   }
   setUser() {
     this.userService.getUsers().then(data => {

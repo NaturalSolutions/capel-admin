@@ -5,7 +5,7 @@ import {DashboardComponent} from './dashboard/dashboard.component';
 import {AuthGuard} from './services/auth-guard';
 import {UsersComponent} from './users/users.component';
 import {DivesComponent} from './dives/dives.component';
-import {PermitsComponent} from './permits/permits.component';
+import {PermitFormComponent} from './permit-form/permit-form.component';
 
 const routes: Routes = [
   {
@@ -25,8 +25,8 @@ const routes: Routes = [
     component: DivesComponent,
     canActivate: [AuthGuard]
   }, {
-    path: 'permits',
-    component: PermitsComponent,
+    path: 'permit-form',
+    component: PermitFormComponent,
     canActivate: [AuthGuard]
   }, {
     path: '**',
