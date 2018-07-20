@@ -1,6 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import {UserService} from '../services/user.service';
 import {ColumnApi, GridApi, GridOptions} from 'ag-grid';
+import {LoadingDialogComponent} from '../app-dialogs/loading-dialog/loading-dialog.component';
+import {MatDialog} from '@angular/material';
 
 @Component({
   selector: 'app-users',
@@ -8,24 +10,26 @@ import {ColumnApi, GridApi, GridOptions} from 'ag-grid';
   styleUrls: ['./users.component.css']
 })
 export class UsersComponent implements OnInit {
-  title = 'app';
   private gridOptions: GridOptions;
   private api: GridApi;
   private columnApi: ColumnApi;
   private columnDefs;
   private defaultColDef;
   private rowData = [];
-  constructor(private userService: UserService) {
+  constructor(private userService: UserService,
+              public dialog: MatDialog,
+  ) {
     this.gridOptions = <GridOptions>{};
     this.defaultColDef = {
       editable: true
     };
     this.columnDefs = [
       {headerName: 'Id', field: 'id', checkboxSelection: true },
-      {headerName: 'Status', field: 'status', cellClassRules: {
-          'rag-green-outer': function(params) { return params.value === 'enabled' },
-          'rag-amber-outer': function(params) { return params.value === 'draft' },
-          'rag-red-outer': function(params) { return params.value === 'blocked' }
+      {headerName: 'Status', field: 'status', cellClassRules:
+          {
+          'rag-green-outer': (params) => { return params.value === 'enabled' },
+          'rag-amber-outer': (params) => { return params.value === 'draft' },
+          'rag-red-outer': (params) => { return params.value === 'blocked' }
         },
         cellRenderer: function(params) {
           return '<span class="rag-element">' + params.value + '</span>';
@@ -39,13 +43,20 @@ export class UsersComponent implements OnInit {
     ];
   }
   deleteUsers() {
+    const dialogRef = this.dialog.open(LoadingDialogComponent, {
+      disableClose: true
+    });
     const selectedNodes = this.api.getSelectedNodes();
     const selectedData = selectedNodes.map( node => node.data );
     this.userService.delete(selectedData).then(data => {
       this.setUser();
+      dialogRef.close();
     });
   }
   blockUser() {
+    const dialogRef = this.dialog.open(LoadingDialogComponent, {
+      disableClose: true
+    });
     const selectedNodes = this.api.getSelectedNodes();
     const selectedData = selectedNodes.map( node => node.data );
     const users = [];
@@ -54,9 +65,13 @@ export class UsersComponent implements OnInit {
     this.userService.patch(users).then(data => {
       console.log(data);
       this.setUser();
+      dialogRef.close();
     });
   }
   unblockUsers() {
+    const dialogRef = this.dialog.open(LoadingDialogComponent, {
+      disableClose: true
+    });
     const selectedNodes = this.api.getSelectedNodes();
     const selectedData = selectedNodes.map( node => node.data );
     const users = [];
@@ -65,6 +80,7 @@ export class UsersComponent implements OnInit {
     this.userService.patch(users).then(data => {
       console.log(data);
       this.setUser();
+      dialogRef.close();
     });
   }
   private onReady(params) {

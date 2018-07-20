@@ -11,4 +11,12 @@ export class PermitService {
       return this.http.post<any>(config.serverURL + '/api/permits', data)
         .toPromise();
   }
+  get(): Promise<any> {
+    return this.http.get<any>(config.serverURL + '/api/typepermits')
+      .toPromise();
+  }
+  activate(data): Promise<any> {
+    return this.http.patch<any>(config.serverURL + '/api/typepermits', data)
+      .toPromise();
+  }
 }

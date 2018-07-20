@@ -1,7 +1,23 @@
 <p>
   Creer un modele d'autorisation
-
 </p>
+<div class="alert alert-warning" role="alert" *ngFor="let error of errors">
+  <span *ngIf="error.dataPath == '.start_at'">
+    la date de début devrait correspondre au format date
+  </span>
+  <span *ngIf="error.dataPath == '.end_at'">
+    la date de fin devrait correspondre au format date
+  </span>
+  <span *ngIf="error.dataPath == '.divesites'">
+    les coeurs marins ne devraient pas avoir moins de 1 élément
+  </span>
+  <span *ngIf="error.dataPath == '.template'">
+    le template ne peut pas être vide
+  </span>
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
 <form [formGroup]="permitForm">
   <div class="form-group">
     <label>Date de Debut</label>
@@ -43,6 +59,7 @@
        [leafletOptions]="leafletOptions"
        (leafletMapReady)="onMapReady($event)">
   </div>
+
   <button type="submit" (click)="save()" class="btn btn-primary"> Envoyer </button>
 </form>
 

@@ -1,0 +1,17 @@
+<ul class="list-inline">
+  <li class="list-inline-item"><a routerLink="/permit-form" class="btn btn-success">Ajouter nouvelle type d'autorisation</a></li>
+  <li class="list-inline-item"><a (click)="activate()" class="btn btn-primary">Activer</a></li>
+</ul>
+<ag-grid-angular
+  style="width: 100%; height: 500px;"
+  class="ag-theme-balham"
+  [enableSorting]="true"
+  [enableFilter]="true"
+  [rowData]="rowData"
+  [columnDefs]="columnDefs"
+  rowSelection="multiple"
+  (gridReady)="onReady($event)"
+  [defaultColDef]="defaultColDef"
+  [paginationAutoPageSize]="true"
+  [pagination]="true"
+>

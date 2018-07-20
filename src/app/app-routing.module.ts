@@ -6,6 +6,7 @@ import {AuthGuard} from './services/auth-guard';
 import {UsersComponent} from './users/users.component';
 import {DivesComponent} from './dives/dives.component';
 import {PermitFormComponent} from './permit-form/permit-form.component';
+import {PermitsComponent} from './permits/permits.component';
 
 const routes: Routes = [
   {
@@ -27,6 +28,10 @@ const routes: Routes = [
   }, {
     path: 'permit-form',
     component: PermitFormComponent,
+    canActivate: [AuthGuard]
+  }, {
+    path: 'permits',
+    component: PermitsComponent,
     canActivate: [AuthGuard]
   }, {
     path: '**',

@@ -61,7 +61,6 @@ export class UserService {
     return this.http.patch<any>(config.serverURL + '/api/users', data)
       .toPromise();
   }
-
   patchMe(data: any): Promise<any> {
     return this.http.patch<any>(config.serverURL + '/api/users/me', data)
       .toPromise();

@@ -4,7 +4,8 @@ import {UserService} from '../services/user.service';
 import * as L from 'leaflet';
 import {PermitService} from '../services/permit.service';
 import {NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
-
+import {Router} from '@angular/router';
+import Ajv from 'ajv';
 @Component({
   selector: 'app-permits',
   templateUrl: './permit-form.component.html',
@@ -14,6 +15,7 @@ export class PermitFormComponent implements OnInit {
   permitForm: FormGroup;
   diveHearts = [];
   map: L.Map;
+  errors;
   leafletOptions = {
     layers: [
       L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18, attribution: '...' })
@@ -31,7 +33,8 @@ export class PermitFormComponent implements OnInit {
   });
   constructor(private userService: UserService,
               private permitService: PermitService,
-              private zone: NgZone) {}
+              private zone: NgZone,
+              private router:Router) {}
   onMapReady(map: L.Map) {
     this.map = map;
     map.on('click', this.checkPoint.bind(this));
@@ -72,7 +75,8 @@ export class PermitFormComponent implements OnInit {
     this.permitForm = new FormGroup({
       start_at: new FormControl('', Validators.required),
       end_at: new FormControl('', Validators.required),
-      template: new FormControl('', Validators.required)
+      template: new FormControl('', Validators.required),
+      status: new FormControl('disabled')
     });
     this.userService.getDiveHearts().then(data => {
       for (let heart of data) {
@@ -95,17 +99,55 @@ export class PermitFormComponent implements OnInit {
       }
     });
   }
-  toModel(date: NgbDateStruct): Date {
-    return date ? new Date('' + date.year + '-' + date.month + '-' + date.day) : null;
+  toDate(date): String {
+    if( (typeof date === "object") && (date !== null) )
+      return new Date('' + date.year + '-' + date.month + '-' + date.day).toISOString();
+    return date;
   }
   save() {
     const formData: any = this.permitForm.getRawValue();
+    //let ajv = new Ajv({$data: true});
+
+    let schema = {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      'type': 'object',
+      'properties': {
+        'start_at': {
+          'type': 'string',
+          'format': 'date-time'
+        },
+        'end_at': {
+          'type': 'string',
+          'format': 'date-time'
+        }, 'template' : {
+          'type': 'array'
+        }, 'divesites' : {
+          'type': 'array',
+           'minItems': 1
+        }
+      }
+    };
+
+
+
     formData.divesites = this.diveHearts;
-    formData.start_at = this.toModel(this.permitForm.controls['start_at'].value);
-    formData.end_at = this.toModel(this.permitForm.controls['end_at'].value);
-    console.log(formData);
+    formData.start_at = this.toDate(this.permitForm.controls['start_at'].value);
+    formData.end_at = this.toDate(this.permitForm.controls['end_at'].value);
+    const validData = {
+      start_at: formData.start_at,
+      end_at: formData.end_at,
+      template: formData.template,
+      divesites: formData.divesites
+    };
+
+    const ajv = new Ajv({allErrors: true, format:'full'}); // options can be passed, e.g. {allErrors: true}
+    const validate = ajv.compile(schema);
+    const valid = validate(validData);
+    console.log(validData, validate.errors);
+    this.errors = validate.errors;
+    if (this.errors.length == 0)
     this.permitService.post(formData).then( data => {
-      console.log(data);
+      this.router.navigate(['/permits']);
     });
   }
 

@@ -27,6 +27,7 @@ import {LeafletModule} from '@asymmetrik/ngx-leaflet';
 import {LeafletMarkerClusterModule} from '@asymmetrik/ngx-leaflet-markercluster';
 import {PermitService} from './services/permit.service';
 import {PermitFormComponent} from './permit-form/permit-form.component';
+import { PermitsComponent } from './permits/permits.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import {PermitFormComponent} from './permit-form/permit-form.component';
     AdminNavComponent,
     UsersComponent,
     PermitFormComponent,
-    DivesComponent
+    DivesComponent,
+    PermitsComponent
   ],
   imports: [
     BrowserModule,
