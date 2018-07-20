@@ -49,7 +49,6 @@ export class PermitFormComponent implements OnInit {
         filetype: file.type,
         value: reader.result.split(',')[1]
       });
-      console.log( this.permitForm.controls['template'].value);
     }
   }
   checkPoint(e) {
@@ -133,19 +132,19 @@ export class PermitFormComponent implements OnInit {
     formData.divesites = this.diveHearts;
     formData.start_at = this.toDate(this.permitForm.controls['start_at'].value);
     formData.end_at = this.toDate(this.permitForm.controls['end_at'].value);
+    console.log(formData.template);
     const validData = {
       start_at: formData.start_at,
       end_at: formData.end_at,
-      template: formData.template,
+      template: Object.values(formData.template),
       divesites: formData.divesites
     };
 
     const ajv = new Ajv({allErrors: true, format:'full'}); // options can be passed, e.g. {allErrors: true}
     const validate = ajv.compile(schema);
     const valid = validate(validData);
-    console.log(validData, validate.errors);
     this.errors = validate.errors;
-    if (this.errors.length == 0)
+    if (!this.errors)
     this.permitService.post(formData).then( data => {
       this.router.navigate(['/permits']);
     });
