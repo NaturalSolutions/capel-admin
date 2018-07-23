@@ -3,9 +3,10 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {UserService} from '../services/user.service';
 import * as L from 'leaflet';
 import {PermitService} from '../services/permit.service';
-import {NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
 import {Router} from '@angular/router';
 import Ajv from 'ajv';
+import {LoadingDialogComponent} from '../app-dialogs/loading-dialog/loading-dialog.component';
+import {MatDialog} from '@angular/material';
 @Component({
   selector: 'app-permits',
   templateUrl: './permit-form.component.html',
@@ -34,7 +35,8 @@ export class PermitFormComponent implements OnInit {
   constructor(private userService: UserService,
               private permitService: PermitService,
               private zone: NgZone,
-              private router:Router) {}
+              private router:Router,
+              private dialog: MatDialog) {}
   onMapReady(map: L.Map) {
     this.map = map;
     map.on('click', this.checkPoint.bind(this));
@@ -104,11 +106,12 @@ export class PermitFormComponent implements OnInit {
     return date;
   }
   save() {
+
     const formData: any = this.permitForm.getRawValue();
     //let ajv = new Ajv({$data: true});
 
     let schema = {
-      "$schema": "http://json-schema.org/draft-07/schema#",
+      '$schema': 'http://json-schema.org/draft-07/schema#',
       'type': 'object',
       'properties': {
         'start_at': {
@@ -119,35 +122,38 @@ export class PermitFormComponent implements OnInit {
           'type': 'string',
           'format': 'date-time'
         }, 'template' : {
-          'type': 'array'
+          'type': 'string'
         }, 'divesites' : {
           'type': 'array',
            'minItems': 1
         }
       }
     };
-
-
-
     formData.divesites = this.diveHearts;
     formData.start_at = this.toDate(this.permitForm.controls['start_at'].value);
     formData.end_at = this.toDate(this.permitForm.controls['end_at'].value);
-    console.log(formData.template);
+    console.log(formData.template['value']);
     const validData = {
       start_at: formData.start_at,
       end_at: formData.end_at,
-      template: Object.values(formData.template),
+      template: formData.template['value'],
       divesites: formData.divesites
     };
+    formData.template = formData.template['value'];
 
     const ajv = new Ajv({allErrors: true, format:'full'}); // options can be passed, e.g. {allErrors: true}
     const validate = ajv.compile(schema);
     const valid = validate(validData);
     this.errors = validate.errors;
-    if (!this.errors)
-    this.permitService.post(formData).then( data => {
-      this.router.navigate(['/permits']);
-    });
+    if (!this.errors) {
+      const dialogRef = this.dialog.open(LoadingDialogComponent, {
+        disableClose: true
+      });
+      this.permitService.post(formData).then(data => {
+        this.router.navigate(['/permits']);
+        dialogRef.close();
+      });
+    }
   }
 
 }
