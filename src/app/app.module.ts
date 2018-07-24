@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { ChartModule } from 'angular2-highcharts';
 
 import { AppComponent } from './app.component';
 import {InitGuard} from './services/init-guard';
@@ -28,7 +29,16 @@ import {LeafletMarkerClusterModule} from '@asymmetrik/ngx-leaflet-markercluster'
 import {PermitService} from './services/permit.service';
 import {PermitFormComponent} from './permit-form/permit-form.component';
 import { PermitsComponent } from './permits/permits.component';
-
+import {DashboardService} from './services/dashboard.service';
+import { HighchartsStatic } from 'angular2-highcharts/dist/HighchartsService';
+import { DialogComponent } from './dialog/dialog.component';
+declare var require: any;
+export function highchartsFactory() {
+  const hc = require('highcharts/highstock');
+  const dd = require('highcharts/modules/exporting');
+  dd(hc);
+  return hc;
+}
 @NgModule({
   declarations: [
     AppComponent,
@@ -38,7 +48,8 @@ import { PermitsComponent } from './permits/permits.component';
     UsersComponent,
     PermitFormComponent,
     DivesComponent,
-    PermitsComponent
+    PermitsComponent,
+    DialogComponent
   ],
   imports: [
     BrowserModule,
@@ -64,17 +75,24 @@ import { PermitsComponent } from './permits/permits.component';
     AgGridModule.withComponents([]),
     LeafletModule.forRoot(),
     LeafletMarkerClusterModule.forRoot(),
+    ChartModule
   ],
   entryComponents: [
+    DialogComponent
 ],
   providers: [
     AuthGuard,
     PermitService,
     UserService,
+    DashboardService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptorService,
       multi: true,
+    },
+    {
+      provide: HighchartsStatic,
+      useFactory: highchartsFactory
     }
   ],
   bootstrap: [AppComponent]

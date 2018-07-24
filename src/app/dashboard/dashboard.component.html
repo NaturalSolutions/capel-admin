@@ -1,24 +1,27 @@
 <div class="grid-container">
   <h1 class="mat-h1">Dashboard</h1>
-  <mat-grid-list cols="2" rowHeight="350px">
-    <mat-grid-tile *ngFor="let card of cards" [colspan]="card.cols" [rowspan]="card.rows">
-      <mat-card class="dashboard-card">
-        <mat-card-header>
-          <mat-card-title>
-            {{card.title}}
-            <button mat-icon-button class="more-button" [matMenuTriggerFor]="menu" aria-label="Toggle menu">
-              <mat-icon>more_vert</mat-icon>
-            </button>
-            <mat-menu #menu="matMenu" xPosition="before">
-              <button mat-menu-item>Expand</button>
-              <button mat-menu-item>Remove</button>
-            </mat-menu>
-          </mat-card-title>
-        </mat-card-header>
-        <mat-card-content class="dashboard-card-content">
-          <div>Card Content Here</div>
-        </mat-card-content>
-      </mat-card>
-    </mat-grid-tile>
-  </mat-grid-list>
+            Statistiques
+  <div class="row text-center d-flex">
+    <div class="col-sm-3 placeholder">
+      <h4>{{nbrUsers}}</h4>
+      <span class="text-muted">Plongeurs(structure/particulers)</span>
+    </div>
+    <div class="col-sm-3 placeholder">
+      <h4>{{nbrPermits}}</h4>
+      <span class="text-muted">Autorisations</span>
+    </div>
+    <div class="col-sm-3 placeholder">
+      <h4>{{nbrDivesSites}}</h4>
+      <span class="text-muted">Site de plongée/Coeur(s) marin(s)</span>
+    </div>
+    <div class="col-sm-3 placeholder">
+      <h4>{{nbrDives}}</h4>
+      <span class="text-muted">Plongées</span>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <chart [options]="options"></chart>
+    </div>
+  </div>
 </div>

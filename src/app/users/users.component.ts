@@ -1,8 +1,9 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import {Component, NgZone, OnInit, ViewChild} from '@angular/core';
 import {UserService} from '../services/user.service';
 import {ColumnApi, GridApi, GridOptions} from 'ag-grid';
 import {LoadingDialogComponent} from '../app-dialogs/loading-dialog/loading-dialog.component';
 import {MatDialog} from '@angular/material';
+import {DialogComponent} from '../dialog/dialog.component';
 
 @Component({
   selector: 'app-users',
@@ -18,6 +19,7 @@ export class UsersComponent implements OnInit {
   private rowData = [];
   constructor(private userService: UserService,
               public dialog: MatDialog,
+              private zone: NgZone
   ) {
     this.gridOptions = <GridOptions>{};
     this.defaultColDef = {
@@ -43,44 +45,72 @@ export class UsersComponent implements OnInit {
     ];
   }
   deleteUsers() {
-    const dialogRef = this.dialog.open(LoadingDialogComponent, {
-      disableClose: true
+    const dialog = this.dialog.open(DialogComponent, {
+      width: '500px',
+      data: { msg: 'voulez-vous supprimer les utilisateurs selectionnes', cnfBtn: 'Supprimer', cnlBtn: 'Annuler' }
     });
-    const selectedNodes = this.api.getSelectedNodes();
-    const selectedData = selectedNodes.map( node => node.data );
-    this.userService.delete(selectedData).then(data => {
-      this.setUser();
-      dialogRef.close();
+
+    dialog.afterClosed().subscribe(result => {
+      if ( result ) {
+        console.log('The dialog was closed');
+        const dialogRef = this.dialog.open(LoadingDialogComponent, {
+          disableClose: true
+        });
+        const selectedNodes = this.api.getSelectedNodes();
+        const selectedData = selectedNodes.map(node => node.data);
+        this.userService.delete(selectedData).then(data => {
+          this.setUser();
+          dialogRef.close();
+        });
+      }
     });
   }
   blockUser() {
-    const dialogRef = this.dialog.open(LoadingDialogComponent, {
-      disableClose: true
+    const dialog = this.dialog.open(DialogComponent, {
+      width: '500px',
+      data: { msg: 'voulez-vous bloquer les utilisateurs selectionnes', cnfBtn: 'bloquer', cnlBtn: 'Annuler' }
     });
-    const selectedNodes = this.api.getSelectedNodes();
-    const selectedData = selectedNodes.map( node => node.data );
-    const users = [];
-    for ( const dataUser of selectedData )
-        users.push( {id: dataUser.id, status: 'blocked', boats: [] });
-    this.userService.patch(users).then(data => {
-      console.log(data);
-      this.setUser();
-      dialogRef.close();
+
+    dialog.afterClosed().subscribe(result => {
+      if ( result ) {
+        const dialogRef = this.dialog.open(LoadingDialogComponent, {
+          disableClose: true
+        });
+        const selectedNodes = this.api.getSelectedNodes();
+        const selectedData = selectedNodes.map(node => node.data);
+        const users = [];
+        for (const dataUser of selectedData)
+          users.push({id: dataUser.id, status: 'blocked', boats: []});
+        this.userService.patch(users).then(data => {
+          console.log(data);
+          this.setUser();
+          dialogRef.close();
+        });
+      }
     });
   }
   unblockUsers() {
-    const dialogRef = this.dialog.open(LoadingDialogComponent, {
-      disableClose: true
+    const dialog = this.dialog.open(DialogComponent, {
+      width: '500px',
+      data: { msg: 'voulez-vous débloquer les utilisateurs selectionnes', cnfBtn: 'Débloquer', cnlBtn: 'Annuler' }
     });
-    const selectedNodes = this.api.getSelectedNodes();
-    const selectedData = selectedNodes.map( node => node.data );
-    const users = [];
-    for ( const dataUser of selectedData )
-      users.push( {id: dataUser.id, status: 'enabled', boats: [] });
-    this.userService.patch(users).then(data => {
-      console.log(data);
-      this.setUser();
-      dialogRef.close();
+
+    dialog.afterClosed().subscribe(result => {
+      if ( result ) {
+        const dialogRef = this.dialog.open(LoadingDialogComponent, {
+          disableClose: true
+        });
+        const selectedNodes = this.api.getSelectedNodes();
+        const selectedData = selectedNodes.map(node => node.data);
+        const users = [];
+        for (const dataUser of selectedData)
+          users.push({id: dataUser.id, status: 'enabled', boats: []});
+        this.userService.patch(users).then(data => {
+          console.log(data);
+          this.setUser();
+          dialogRef.close();
+        });
+      }
     });
   }
   private onReady(params) {

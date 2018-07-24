@@ -3,6 +3,7 @@ import {PermitService} from '../services/permit.service';
 import {ColumnApi, GridApi, GridOptions} from 'ag-grid';
 import {LoadingDialogComponent} from '../app-dialogs/loading-dialog/loading-dialog.component';
 import {MatDialog} from '@angular/material';
+import {DialogComponent} from '../dialog/dialog.component';
 @Component({
   selector: 'app-permits',
   templateUrl: './permits.component.html',
@@ -46,19 +47,28 @@ export class PermitsComponent implements OnInit {
 
   }
   activate() {
-    const dialogRef = this.dialog.open(LoadingDialogComponent, {
-      disableClose: true
+    const dialog = this.dialog.open(DialogComponent, {
+      width: '500px',
+      data: { msg: "voulez-vous activer le type d'autorisation selectionnée", cnfBtn: 'Activer', cnlBtn: 'Annuler' }
     });
-    const selectedNodes = this.api.getSelectedNodes();
-    const selectedData = selectedNodes.map( node => node.data );
-    const typePermits = [];
-    for ( const typepermit of selectedData )
-      typePermits.push( {id: typepermit.id, status: 'enabled' });
-      this.permitService.activate(typePermits).then( data => {
-        console.log(data);
-        this.setTypePermits();
-        dialogRef.close();
-      });
+
+    dialog.afterClosed().subscribe(result => {
+      if ( result ) {
+        const dialogRef = this.dialog.open(LoadingDialogComponent, {
+          disableClose: true
+        });
+        const selectedNodes = this.api.getSelectedNodes();
+        const selectedData = selectedNodes.map(node => node.data);
+        const typePermits = [];
+        for (const typepermit of selectedData)
+          typePermits.push({id: typepermit.id, status: 'enabled'});
+        this.permitService.activate(typePermits).then(data => {
+          console.log(data);
+          this.setTypePermits();
+          dialogRef.close();
+        });
+      }
+    });
   }
   ngOnInit() {
     this.setTypePermits();
