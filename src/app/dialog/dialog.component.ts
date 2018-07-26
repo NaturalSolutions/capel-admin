@@ -6,7 +6,6 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
     <h4>Attention !</h4>
     <mat-dialog-content>
       {{data.msg}}<br/>
-      
     </mat-dialog-content>
     <mat-dialog-actions>
       <button mat-raised-button mat-dialog-close color="primary" (click)="ok()">

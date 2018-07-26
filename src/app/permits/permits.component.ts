@@ -11,12 +11,12 @@ import {DialogComponent} from '../dialog/dialog.component';
 })
 export class PermitsComponent implements OnInit {
   typePermits: any[] = [];
-  private gridOptions: GridOptions;
-  private api: GridApi;
-  private columnApi: ColumnApi;
-  private columnDefs;
-  private defaultColDef;
-  private rowData = [];
+   gridOptions: GridOptions;
+   api: GridApi;
+   columnApi: ColumnApi;
+   columnDefs;
+   defaultColDef;
+   rowData = [];
   constructor(private permitService: PermitService,
               private dialog: MatDialog
   ){
@@ -40,7 +40,7 @@ export class PermitsComponent implements OnInit {
     ];
 
   }
-  private onReady(params) {
+  onReady(params) {
     this.api = params.api;
     this.columnApi = params.columnApi;
     this.setTypePermits();

@@ -4,7 +4,7 @@ import {UserService} from '../services/user.service';
 import * as L from 'leaflet';
 import {PermitService} from '../services/permit.service';
 import {Router} from '@angular/router';
-import Ajv from 'ajv';
+import * as Ajv from 'ajv';
 import {LoadingDialogComponent} from '../app-dialogs/loading-dialog/loading-dialog.component';
 import {MatDialog} from '@angular/material';
 @Component({

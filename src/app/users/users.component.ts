@@ -11,12 +11,12 @@ import {DialogComponent} from '../dialog/dialog.component';
   styleUrls: ['./users.component.css']
 })
 export class UsersComponent implements OnInit {
-  private gridOptions: GridOptions;
-  private api: GridApi;
-  private columnApi: ColumnApi;
-  private columnDefs;
-  private defaultColDef;
-  private rowData = [];
+   gridOptions: GridOptions;
+   api: GridApi;
+   columnApi: ColumnApi;
+   columnDefs;
+   defaultColDef;
+   rowData = [];
   constructor(private userService: UserService,
               public dialog: MatDialog,
               private zone: NgZone
@@ -113,7 +113,7 @@ export class UsersComponent implements OnInit {
       }
     });
   }
-  private onReady(params) {
+  onReady(params) {
     this.api = params.api;
     this.columnApi = params.columnApi;
     this.setUser();
