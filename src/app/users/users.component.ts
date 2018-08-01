@@ -138,5 +138,23 @@ export class UsersComponent implements OnInit {
       this.rowData = users;
     });
   }
+  onEnter(value: any) {
+    this.userService.searchUsers(value).then(data => {
+      console.log(data);
+      const users = []
+      for (const user of data) {
+        users.push({
+          id: user.id,
+          firstname: user.firstname,
+          lastname: user.lastname,
+          category: user.category,
+          email: user.email,
+          status: user.status,
+          address: user.address
+        });
+      }
+      this.rowData = users;
+    });
+  }
 
 }

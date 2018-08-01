@@ -1,4 +1,5 @@
 <ul class="list-inline">
+  <li style="margin: 10px 0">  <input type="text" class="form-control" placeholder="chercher par nom, prénom ou email..." #box (keyup.enter)="onEnter(box.value)" /></li>
   <li class="list-inline-item"><button (click)="blockUser()" class="btn btn-warning">Bloquer</button></li>
   <li class="list-inline-item"><button (click)="unblockUsers()" class="btn btn-success">Débloquer</button></li>
   <li class="list-inline-item"><button (click)="deleteUsers()" class="btn btn-danger">Supprimer</button></li>

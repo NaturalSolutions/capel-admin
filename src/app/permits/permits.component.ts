@@ -17,6 +17,7 @@ export class PermitsComponent implements OnInit {
    columnDefs;
    defaultColDef;
    rowData = [];
+   date_options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
   constructor(private permitService: PermitService,
               private dialog: MatDialog
   ){
@@ -82,8 +83,8 @@ export class PermitsComponent implements OnInit {
         for (const heart of type_permit.dive_sites)
           hearts += ', ' + heart.name;
         typePermits.push({id: type_permit.id,
-          start_at: type_permit.start_at,
-          end_at: type_permit.end_at,
+          start_at: new Date(type_permit.start_at).toLocaleDateString('fr-FR', this.date_options),
+          end_at: new Date(type_permit.end_at).toLocaleDateString('fr-FR', this.date_options),
           status: type_permit.status,
           hearts: hearts
         });

@@ -37,6 +37,17 @@ export class UserService {
     return this.http.get<any>(config.serverURL + '/api/users')
       .toPromise();
   }
+  /* GET heroes whose name contains search term */
+  searchUsers(term: string): Promise<any> {
+    term = term.trim();
+
+    // Add safe, URL encoded search parameter if there is a search term
+    const options = term ?
+      { params: new HttpParams().set('term', term) } : {};
+
+    return this.http.get<any>(config.serverURL + '/api/users', options)
+      .toPromise();
+  }
   getDiveHearts(): Promise<any> {
     return this.http.get<any>(config.serverURL + '/api/users/divehearts')
       .toPromise();
