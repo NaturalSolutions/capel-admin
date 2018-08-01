@@ -47,7 +47,7 @@ export class UsersComponent implements OnInit {
   deleteUsers() {
     const dialog = this.dialog.open(DialogComponent, {
       width: '500px',
-      data: { msg: 'voulez-vous supprimer les utilisateurs selectionnes', cnfBtn: 'Supprimer', cnlBtn: 'Annuler' }
+      data: { msg: 'voulez-vous supprimer les utilisateurs sélectionnés', cnfBtn: 'Supprimer', cnlBtn: 'Annuler' }
     });
 
     dialog.afterClosed().subscribe(result => {
@@ -68,7 +68,7 @@ export class UsersComponent implements OnInit {
   blockUser() {
     const dialog = this.dialog.open(DialogComponent, {
       width: '500px',
-      data: { msg: 'voulez-vous bloquer les utilisateurs selectionnes', cnfBtn: 'bloquer', cnlBtn: 'Annuler' }
+      data: { msg: 'voulez-vous bloquer les utilisateurs sélectionnés', cnfBtn: 'bloquer', cnlBtn: 'Annuler' }
     });
 
     dialog.afterClosed().subscribe(result => {
@@ -92,7 +92,7 @@ export class UsersComponent implements OnInit {
   unblockUsers() {
     const dialog = this.dialog.open(DialogComponent, {
       width: '500px',
-      data: { msg: 'voulez-vous débloquer les utilisateurs selectionnes', cnfBtn: 'Débloquer', cnlBtn: 'Annuler' }
+      data: { msg: 'voulez-vous débloquer les utilisateurs sélectionnés', cnfBtn: 'Débloquer', cnlBtn: 'Annuler' }
     });
 
     dialog.afterClosed().subscribe(result => {

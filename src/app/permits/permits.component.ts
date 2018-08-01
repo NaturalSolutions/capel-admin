@@ -10,7 +10,7 @@ import {DialogComponent} from '../dialog/dialog.component';
   styleUrls: ['./permits.component.css']
 })
 export class PermitsComponent implements OnInit {
-  typePermits: any[] = [];
+   typePermits: any[] = [];
    gridOptions: GridOptions;
    api: GridApi;
    columnApi: ColumnApi;
@@ -49,7 +49,7 @@ export class PermitsComponent implements OnInit {
   activate() {
     const dialog = this.dialog.open(DialogComponent, {
       width: '500px',
-      data: { msg: "voulez-vous activer le type d'autorisation selectionnée", cnfBtn: 'Activer', cnlBtn: 'Annuler' }
+      data: { msg: "voulez-vous activer le type d'autorisation sélectionné", cnfBtn: 'Activer', cnlBtn: 'Annuler' }
     });
 
     dialog.afterClosed().subscribe(result => {
