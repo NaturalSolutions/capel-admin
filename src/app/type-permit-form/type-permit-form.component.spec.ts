@@ -1,8 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PermitsComponent } from './permits.component';
+import { PermitsComponent } from './type-permit-form.component';
 
-describe('PermitsComponent', () => {
+describe('TypePermitsComponent', () => {
   let component: PermitsComponent;
   let fixture: ComponentFixture<PermitsComponent>;
 

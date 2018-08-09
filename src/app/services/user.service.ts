@@ -38,13 +38,10 @@ export class UserService {
       .toPromise();
   }
   /* GET heroes whose name contains search term */
-  searchUsers(term: string): Promise<any> {
-    term = term.trim();
-
+  searchUsers(term: any): Promise<any> {
     // Add safe, URL encoded search parameter if there is a search term
-    const options = term ?
-      { params: new HttpParams().set('term', term) } : {};
-
+    const options = term ? { params: new HttpParams().set('search_date', term['search_date']).set('search_term', term.search_term)} : {};
+    console.log(options);
     return this.http.get<any>(config.serverURL + '/api/users', options)
       .toPromise();
   }

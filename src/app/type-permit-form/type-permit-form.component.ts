@@ -9,19 +9,20 @@ import {LoadingDialogComponent} from '../app-dialogs/loading-dialog/loading-dial
 import {MatDialog} from '@angular/material';
 @Component({
   selector: 'app-permits',
-  templateUrl: './permit-form.component.html',
-  styleUrls: ['./permit-form.component.css']
+  templateUrl: './type-permit-form.component.html',
+  styleUrls: ['./type-permit-form.component.css']
 })
-export class PermitFormComponent implements OnInit {
+export class TypePermitFormComponent implements OnInit {
   permitForm: FormGroup;
   diveHearts = [];
   map: L.Map;
+  chooseFileLabel = 'Sélectionner un fichier'
   errors;
   leafletOptions = {
     layers: [
       L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18, attribution: '...' })
     ],
-    zoom: 7,
+    zoom: 11,
     center: L.latLng(43, 6.3833),
     dragging: true,
     scrollWheelZoom: false
@@ -35,7 +36,7 @@ export class PermitFormComponent implements OnInit {
   constructor(private userService: UserService,
               private permitService: PermitService,
               private zone: NgZone,
-              private router:Router,
+              private router: Router,
               private dialog: MatDialog) {}
   onMapReady(map: L.Map) {
     this.map = map;
@@ -44,6 +45,7 @@ export class PermitFormComponent implements OnInit {
   upload(e) {
     const reader = new FileReader();
     const file = e.target.files[0];
+    this.chooseFileLabel = file.name;
     reader.readAsDataURL(file);
     reader.onload = () => {
       this.permitForm.controls['template'].setValue({
@@ -77,7 +79,7 @@ export class PermitFormComponent implements OnInit {
       start_at: new FormControl('', Validators.required),
       end_at: new FormControl('', Validators.required),
       template: new FormControl('', Validators.required),
-      status: new FormControl('disabled')
+      status: new FormControl('enabled')
     });
     this.userService.getDiveHearts().then(data => {
       for (let heart of data) {

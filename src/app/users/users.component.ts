@@ -4,6 +4,7 @@ import {ColumnApi, GridApi, GridOptions} from 'ag-grid';
 import {LoadingDialogComponent} from '../app-dialogs/loading-dialog/loading-dialog.component';
 import {MatDialog} from '@angular/material';
 import {DialogComponent} from '../dialog/dialog.component';
+import {ICellRendererAngularComp} from 'ag-grid-angular';
 
 @Component({
   selector: 'app-users',
@@ -17,6 +18,10 @@ export class UsersComponent implements OnInit {
    columnDefs;
    defaultColDef;
    rowData = [];
+   boats = []
+  date_options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
+  search_date;
+  search_term;
   constructor(private userService: UserService,
               public dialog: MatDialog,
               private zone: NgZone
@@ -37,12 +42,23 @@ export class UsersComponent implements OnInit {
           return '<span class="rag-element">' + params.value + '</span>';
         }
       },
-      {headerName: 'Nom', field: 'firstname' },
-      {headerName: 'Prénom', field: 'lastname'},
+      {headerName: 'Nom', field: 'lastname' },
+      {headerName: 'Prénom', field: 'firstname'},
+      {headerName: "Date d'inscription", field: 'created_at'},
+      {headerName: 'Review', field: 'review',  cellRendererFramework: MoodRendererComponent},
       {headerName: 'Catégorie', field: 'category'},
       {headerName: 'Email', field: 'email', cellStyle: { backgroundColor: "#aaffaa" }},
-      {headerName: 'Addresse', field: 'address'}
+      {headerName: 'Addresse', field: 'address'},
+      {headerName: 'Boats', field: 'boats'}
     ];
+  }
+  onSelectionChanged(event) {
+    const selectedRows = this.api.getSelectedRows();
+    for (const selectedRow of selectedRows){
+      console.log(selectedRow);
+      this.boats = selectedRow.boats;
+      console.log(this.boats);
+    }
   }
   deleteUsers() {
     const dialog = this.dialog.open(DialogComponent, {
@@ -127,34 +143,81 @@ export class UsersComponent implements OnInit {
       const users = []
       for (const user of data){
         users.push({id: user.id,
-          firstname: user.firstname,
           lastname: user.lastname,
+          firstname: user.firstname,
           category: user.category,
+          created_at: new Date(user.created_at).toLocaleDateString('fr-FR', this.date_options),
+          review: user.review,
           email: user.email,
           status: user.status,
-          address: user.address
+          address: user.address,
+          boats: user.boats
         });
       }
       this.rowData = users;
     });
   }
   onEnter(value: any) {
-    this.userService.searchUsers(value).then(data => {
+    this.search_term = value;
+  }
+  filtre() {
+    this.userService.searchUsers({'search_date' : this.search_date, 'search_tearm': this.search_term}).then(data => {
       console.log(data);
       const users = []
       for (const user of data) {
         users.push({
           id: user.id,
-          firstname: user.firstname,
           lastname: user.lastname,
+          firstname: user.firstname,
           category: user.category,
+          created_at: new Date(user.created_at).toLocaleDateString('fr-FR', this.date_options),
+          review: user.review,
           email: user.email,
           status: user.status,
-          address: user.address
+          address: user.address,
+          boats: user.boats
         });
       }
       this.rowData = users;
     });
   }
+  onDateSelect(event){
+    this.search_date = this.toDate(event);
+  }
 
+  toDate(date): String {
+    return date.year + '-' + date.month + '-' + date.day;
+  }
 }
+// create your cellRenderer as a Angular component
+@Component({
+  selector: 'square-cell',
+  template: `<p>{{ params.data.review }}</p>`
+})
+export class MoodRendererComponent implements ICellRendererAngularComp {
+   params: any;
+
+  public constructor(private userService: UserService,
+                     public dialog: MatDialog,
+                     private zone: NgZone){}
+  agInit(params: any): void {
+    this.params = params;
+    this.setMood(params);
+  }
+
+  refresh(params: any): boolean {
+    this.params = params;
+    this.setMood(params);
+    return true;
+  }
+
+  private setMood(params) {
+        const users = [];
+        users.push({id: params.data.id, review: params.data.review, boats: []});
+        this.userService.patch(users).then(data => {
+          console.log(data);
+        });
+
+    }
+}
+// then reference the Component in your colDef like this

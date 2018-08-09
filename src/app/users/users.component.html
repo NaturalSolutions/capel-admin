@@ -1,11 +1,30 @@
+<div class="row">
+  <div class="col">
+    <div class="form-group">
+      <label>Date d'inscription</label>
+      <div class="input-group">
+        <input class="form-control" placeholder="yyyy-mm-dd" name="dp1" formControlName="start_at" (dateSelect)="onDateSelect($event)" ngbDatepicker #startDate="ngbDatepicker">
+        <div class="input-group-append">
+          <button class="btn btn-outline-secondary" (click)="startDate.toggle()" type="button">
+            <i class="fa fa-calendar" aria-hidden="true"></i>        </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col">
+    <label>Nom, prénom ou email</label>
+    <input type="text" class="form-control" placeholder="chercher par nom, prénom ou email..." #box (keyup.enter)="onEnter(box.value)" />
+  </div>
+</div>
 <ul class="list-inline">
-  <li style="margin: 10px 0">  <input type="text" class="form-control" placeholder="chercher par nom, prénom ou email..." #box (keyup.enter)="onEnter(box.value)" /></li>
   <li class="list-inline-item"><button (click)="blockUser()" class="btn btn-warning">Bloquer</button></li>
   <li class="list-inline-item"><button (click)="unblockUsers()" class="btn btn-success">Débloquer</button></li>
   <li class="list-inline-item"><button (click)="deleteUsers()" class="btn btn-danger">Supprimer</button></li>
+  <li class="list-inline-item"><button (click)="filtre()" class="btn btn-info">Filtrer</button></li>
+
 </ul>
 <ag-grid-angular
-  style="width: 100%; height: 500px;"
+  style="width: 100%; height: 300px;"
   class="ag-theme-balham"
   [enableSorting]="true"
   [enableFilter]="true"
@@ -15,6 +34,10 @@
   (gridReady)="onReady($event)"
   [defaultColDef]="defaultColDef"
   [paginationAutoPageSize]="true"
+  (selectionChanged)="onSelectionChanged($event)"
   [pagination]="true"
 >
 </ag-grid-angular>
+<h5>Bateaux</h5>
+<p>sélectionner un utlisateur pour afficher ces bataux</p>
+<app-boats [boats]="boats" ></app-boats>

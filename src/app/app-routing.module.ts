@@ -5,8 +5,9 @@ import {DashboardComponent} from './dashboard/dashboard.component';
 import {AuthGuard} from './services/auth-guard';
 import {UsersComponent} from './users/users.component';
 import {DivesComponent} from './dives/dives.component';
-import {PermitFormComponent} from './permit-form/permit-form.component';
+import {TypePermitsComponent} from './type-permits/type-permits.component';
 import {PermitsComponent} from './permits/permits.component';
+import {TypePermitFormComponent} from './type-permit-form/type-permit-form.component';
 
 const routes: Routes = [
   {
@@ -26,8 +27,12 @@ const routes: Routes = [
     component: DivesComponent,
     canActivate: [AuthGuard]
   }, {
-    path: 'permit-form',
-    component: PermitFormComponent,
+    path: 'type-permit-form',
+    component: TypePermitFormComponent,
+    canActivate: [AuthGuard]
+  }, {
+    path: 'type-permits',
+    component: TypePermitsComponent,
     canActivate: [AuthGuard]
   }, {
     path: 'permits',

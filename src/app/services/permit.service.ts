@@ -15,6 +15,10 @@ export class PermitService {
     return this.http.get<any>(config.serverURL + '/api/typepermits')
       .toPromise();
   }
+  getPermits(): Promise<any> {
+    return this.http.get<any>(config.serverURL + '/api/permits')
+      .toPromise();
+  }
   activate(data): Promise<any> {
     return this.http.patch<any>(config.serverURL + '/api/typepermits', data)
       .toPromise();

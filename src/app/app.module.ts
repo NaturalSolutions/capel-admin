@@ -20,18 +20,20 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { MatGridListModule, MatCardModule, MatMenuModule, MatIconModule, MatButtonModule, MatToolbarModule, MatSidenavModule, MatListModule } from '@angular/material';
 import { LayoutModule } from '@angular/cdk/layout';
 import { AdminNavComponent } from './admin-nav/admin-nav.component';
-import { UsersComponent } from './users/users.component';
+import { UsersComponent, MoodRendererComponent} from './users/users.component';
 import { DivesComponent } from './dives/dives.component';
 import {AgGridModule} from 'ag-grid-angular';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {LeafletModule} from '@asymmetrik/ngx-leaflet';
 import {LeafletMarkerClusterModule} from '@asymmetrik/ngx-leaflet-markercluster';
 import {PermitService} from './services/permit.service';
-import {PermitFormComponent} from './permit-form/permit-form.component';
-import { PermitsComponent } from './permits/permits.component';
 import {DashboardService} from './services/dashboard.service';
 import { HighchartsStatic } from 'angular2-highcharts/dist/HighchartsService';
 import { DialogComponent } from './dialog/dialog.component';
+import { BoatsComponent } from './boats/boats.component';
+import {TypePermitFormComponent} from './type-permit-form/type-permit-form.component';
+import {TypePermitsComponent} from './type-permits/type-permits.component';
+import {PermitsComponent} from './permits/permits.component';
 declare var require: any;
 export function highchartsFactory() {
   const hc = require('highcharts/highstock');
@@ -46,10 +48,13 @@ export function highchartsFactory() {
     DashboardComponent,
     AdminNavComponent,
     UsersComponent,
-    PermitFormComponent,
+    TypePermitFormComponent,
     DivesComponent,
-    PermitsComponent,
-    DialogComponent
+    TypePermitsComponent,
+    DialogComponent,
+    MoodRendererComponent,
+    BoatsComponent,
+    PermitsComponent
   ],
   imports: [
     BrowserModule,
@@ -72,14 +77,14 @@ export function highchartsFactory() {
     MatSidenavModule,
     MatListModule,
     NgbModule.forRoot(),
-    AgGridModule.withComponents([]),
+    AgGridModule.withComponents([MoodRendererComponent]),
     LeafletModule.forRoot(),
     LeafletMarkerClusterModule.forRoot(),
     ChartModule
   ],
   entryComponents: [
     DialogComponent
-],
+  ],
   providers: [
     AuthGuard,
     PermitService,

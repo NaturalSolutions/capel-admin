@@ -6,10 +6,10 @@ import {MatDialog} from '@angular/material';
 import {DialogComponent} from '../dialog/dialog.component';
 @Component({
   selector: 'app-permits',
-  templateUrl: './permits.component.html',
-  styleUrls: ['./permits.component.css']
+  templateUrl: './type-permits.component.html',
+  styleUrls: ['./type-permits.component.css']
 })
-export class PermitsComponent implements OnInit {
+export class TypePermitsComponent implements OnInit {
    typePermits: any[] = [];
    gridOptions: GridOptions;
    api: GridApi;
