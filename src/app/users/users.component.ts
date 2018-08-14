@@ -45,9 +45,9 @@ export class UsersComponent implements OnInit {
       {headerName: 'Nom', field: 'lastname' },
       {headerName: 'Prénom', field: 'firstname'},
       {headerName: "Date d'inscription", field: 'created_at'},
-      {headerName: 'Review', field: 'review',  cellRendererFramework: MoodRendererComponent},
+      {headerName: 'Commentaire', field: 'review',  cellRendererFramework: MoodRendererComponent},
       {headerName: 'Catégorie', field: 'category'},
-      {headerName: 'Email', field: 'email', cellStyle: { backgroundColor: "#aaffaa" }},
+      {headerName: 'Email', field: 'email'},
       {headerName: 'Addresse', field: 'address'},
       {headerName: 'Boats', field: 'boats'}
     ];

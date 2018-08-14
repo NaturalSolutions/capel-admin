@@ -18,10 +18,7 @@ export class AppComponent implements OnInit {
   }
   ngOnInit() {
     this.router.events.subscribe(value => {
-      console.log(this.pageNoSidenav)
       this.pageNoSidenav = ['/login', '/register'].indexOf(this.router.routerState.snapshot.url) > -1;
-      console.log(this.pageNoSidenav)
-
       if (this.pageNoSidenav)
         this.showSidenav = false;
       else

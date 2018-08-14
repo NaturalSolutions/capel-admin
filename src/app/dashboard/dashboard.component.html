@@ -1,27 +1,149 @@
-<div class="grid-container">
+<div class="grid-container" *ngIf="permits && users && boats">
+  <!--
+ <div class="row">
+
+   <div class="col-md-12 filter-dv">
+     <ul class="list-inline">
+       <li class="list-inline-item">Filtrée par :</li>
+       <li class="list-inline-item">
+         <mat-form-field>
+           <mat-select placeholder="Type Plongeur" (selectionChange)="setTypeUser($event)">
+             <mat-option  value="particulier">Particulier</mat-option>
+             <mat-option  value="structure">Structure</mat-option>
+             <mat-option  value="tous">Tous</mat-option>
+           </mat-select>
+         </mat-form-field>
+       </li>
+       <li class="list-inline-item">
+         <mat-form-field>
+           <mat-select placeholder="Coeur Marine" (selectionChange)="setStatisticsByDate($event)">
+             <mat-option  [value]="2017">2017</mat-option>
+             <mat-option  [value]="2018">2018</mat-option>
+             <mat-option  [value]="2019">2019</mat-option>
+             <mat-option  value="tous">Toutes</mat-option>
+           </mat-select>
+         </mat-form-field>
+       </li>
+       <li class="list-inline-item">
+         <mat-form-field>
+           <mat-select placeholder="Site de plongée" (selectionChange)="setStatistics($event)">
+             <mat-option *ngFor="let divesite of diveSites" [value]="divesite">
+               {{ divesite.name }}
+             </mat-option>
+             <mat-option  value="tous">Tous</mat-option>
+           </mat-select>
+         </mat-form-field>
+       </li>
+     </ul>
+   </div>
+ </div>
+ -->
   <h1 class="mat-h1">Dashboard</h1>
-            Statistiques
+  Statistiques Utilisateurs
   <div class="row text-center d-flex">
     <div class="col-sm-3 placeholder">
-      <h4>{{nbrUsers}}</h4>
-      <span class="text-muted">Plongeurs(structure/particulers)</span>
+      <h4>{{users.length}}</h4>
+      <span class="text-muted">Plongeurs</span>
     </div>
     <div class="col-sm-3 placeholder">
-      <h4>{{nbrPermits}}</h4>
-      <span class="text-muted">Autorisations</span>
+      <h4>{{boats.length}}</h4>
+      <span class="text-muted">Bateaux</span>
     </div>
     <div class="col-sm-3 placeholder">
-      <h4>{{nbrDivesSites}}</h4>
-      <span class="text-muted">Site de plongée/Coeur(s) marin(s)</span>
+      <h4>{{getCntUsersByType(users, 'structure')}}</h4>
+      <span class="text-muted">Structures</span>
     </div>
     <div class="col-sm-3 placeholder">
-      <h4>{{nbrDives}}</h4>
+      <h4>{{getCntUsersByType(users, 'particulier')}}</h4>
+      <span class="text-muted">Particuliers</span>
+    </div>
+  </div>
+  Statistiques Signataires
+  <div class="row text-center d-flex">
+    <div class="col-sm-3 placeholder">
+      <h4>{{permits.length}}</h4>
+      <span class="text-muted">Signataires</span>
+    </div>
+    <div class="col-sm-3 placeholder">
+      <h4>{{getCntPermit('boats')}}</h4>
+      <span class="text-muted">Bateaux</span>
+    </div>
+    <div class="col-sm-3 placeholder">
+      <h4>{{getCntPermit('structure')}}</h4>
+      <span class="text-muted">Structures</span>
+    </div>
+    <div class="col-sm-3 placeholder">
+      <h4>{{getCntPermit('particulier')}}</h4>
+      <span class="text-muted">Particuliers</span>
+    </div>
+  </div>
+  Statistiques Plongées
+  <!--
+  <div class="row text-center d-flex">
+    <div class="col-sm-3 placeholder">
+      <h4>{{dives.length}}</h4>
+      <span class="text-muted">Plongées</span>
+    </div>
+    <div class="col-sm-3 placeholder">
+      <h4>{{boats.length}}</h4>
+      <span class="text-muted">Bateaux</span>
+    </div>
+    <div class="col-sm-3 placeholder">
+      <h4>{{dives.length}}</h4>
       <span class="text-muted">Plongées</span>
     </div>
   </div>
+  <div class="col-md-12 filter-dv">
+    <ul class="list-inline">
+      <li class="list-inline-item">Filtrée par :</li>
+      <li class="list-inline-item">
+        <mat-form-field>
+          <mat-select placeholder="Année" (selectionChange)="setStatisticsByDate($event)">
+            <mat-option  [value]="2017">2017</mat-option>
+            <mat-option  [value]="2018">2018</mat-option>
+            <mat-option  [value]="2019">2019</mat-option>
+            <mat-option  value="tous">Toutes</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </li>
+      <li class="list-inline-item">
+        <mat-form-field>
+          <mat-select placeholder="Mois" (selectionChange)="setStatisticsByDate($event)">
+            <mat-option  [value]="1">1</mat-option>
+            <mat-option  [value]="2">2</mat-option>
+            <mat-option  [value]="3">3</mat-option>
+            <mat-option  [value]="4">4</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </li>
+      <li class="list-inline-item">
+        <mat-form-field>
+          <mat-select placeholder="Jour" (selectionChange)="setStatisticsByDate($event)">
+            <mat-option  [value]="1">1</mat-option>
+            <mat-option  [value]="2">2</mat-option>
+            <mat-option  [value]="3">3</mat-option>
+            <mat-option  [value]="4">4</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </li>
+    </ul>
+  </div>
+  -->
   <div class="row">
     <div class="col-md-12">
       <chart [options]="options"></chart>
+    </div>
+  </div>
+  Statistiques par Site
+  <div class="row">
+    <div class="col-md-12">
+      <chart [options]="optionsSites"></chart>
+    </div>
+  </div>
+  Statistiques par Coeur
+  <div class="row">
+    <div class="col-md-12">
+      <chart [options]="optionsHearts"></chart>
     </div>
   </div>
 </div>
