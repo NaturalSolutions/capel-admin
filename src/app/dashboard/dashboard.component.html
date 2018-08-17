@@ -39,7 +39,31 @@
  </div>
  -->
   <h1 class="mat-h1">Dashboard</h1>
-  Statistiques Utilisateurs
+  <mat-toolbar class="mat-toolbar mat-toolbar-single-row">General</mat-toolbar>
+  <div class="row text-center d-flex">
+    <div class="col placeholder">
+      <h4>{{dives.length/nbrDivesDays | number}}</h4>
+      <span class="text-muted">Par Jour</span>
+    </div>
+    <div class="col placeholder">
+      <h4>{{dives.length/(nbrDivesDays / 30) | number}}</h4>
+      <span class="text-muted">Par mois</span>
+    </div>
+    <div class="col placeholder">
+      <h4>{{dives.length/(nbrDivesDays / 365) | number}}</h4>
+      <span class="text-muted">Par Année</span>
+    </div>
+    <div class="col placeholder">
+      <h4>{{dives.length/groupedDiveSites.length | number}}</h4>
+      <span class="text-muted">Par site</span>
+    </div>
+    <div class="col placeholder">
+      <h4>{{getHeatsDivesMoy() | number }}</h4>
+      <span class="text-muted">Par Coeur</span>
+    </div>
+  </div>
+
+  <mat-toolbar class="mat-toolbar mat-toolbar-single-row">Utilisateurs</mat-toolbar>
   <div class="row text-center d-flex">
     <div class="col-sm-3 placeholder">
       <h4>{{users.length}}</h4>
@@ -58,7 +82,6 @@
       <span class="text-muted">Particuliers</span>
     </div>
   </div>
-  Statistiques Signataires
   <div class="row text-center d-flex">
     <div class="col-sm-3 placeholder">
       <h4>{{permits.length}}</h4>
@@ -77,73 +100,97 @@
       <span class="text-muted">Particuliers</span>
     </div>
   </div>
-  Statistiques Plongées
-  <!--
-  <div class="row text-center d-flex">
-    <div class="col-sm-3 placeholder">
-      <h4>{{dives.length}}</h4>
-      <span class="text-muted">Plongées</span>
-    </div>
-    <div class="col-sm-3 placeholder">
-      <h4>{{boats.length}}</h4>
-      <span class="text-muted">Bateaux</span>
-    </div>
-    <div class="col-sm-3 placeholder">
-      <h4>{{dives.length}}</h4>
-      <span class="text-muted">Plongées</span>
-    </div>
-  </div>
-  <div class="col-md-12 filter-dv">
-    <ul class="list-inline">
-      <li class="list-inline-item">Filtrée par :</li>
-      <li class="list-inline-item">
-        <mat-form-field>
-          <mat-select placeholder="Année" (selectionChange)="setStatisticsByDate($event)">
-            <mat-option  [value]="2017">2017</mat-option>
-            <mat-option  [value]="2018">2018</mat-option>
-            <mat-option  [value]="2019">2019</mat-option>
-            <mat-option  value="tous">Toutes</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </li>
-      <li class="list-inline-item">
-        <mat-form-field>
-          <mat-select placeholder="Mois" (selectionChange)="setStatisticsByDate($event)">
-            <mat-option  [value]="1">1</mat-option>
-            <mat-option  [value]="2">2</mat-option>
-            <mat-option  [value]="3">3</mat-option>
-            <mat-option  [value]="4">4</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </li>
-      <li class="list-inline-item">
-        <mat-form-field>
-          <mat-select placeholder="Jour" (selectionChange)="setStatisticsByDate($event)">
-            <mat-option  [value]="1">1</mat-option>
-            <mat-option  [value]="2">2</mat-option>
-            <mat-option  [value]="3">3</mat-option>
-            <mat-option  [value]="4">4</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </li>
-    </ul>
-  </div>
-  -->
   <div class="row">
     <div class="col-md-12">
-      <chart [options]="options"></chart>
+      <chart [options]="optionsSignatairebyHours"></chart>
     </div>
   </div>
-  Statistiques par Site
+
+  <mat-toolbar class="mat-toolbar mat-toolbar-single-row">Plongées</mat-toolbar>
+  <div class="row text-center d-flex">
+    <div class="col-sm-3">
+      <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
+        <div class="input-group">
+          <div class="form-group">
+            <div class="input-group">
+              <label>Du </label>
+              <input class="form-control" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="startDatePModel" ngbDatepicker
+                     #startDate="ngbDatepicker">
+              <div class="input-group-append">
+                <button class="btn btn-outline-secondary" (click)="startDate.toggle()" type="button">
+                  <i class="fa fa-calendar" aria-hidden="true"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-3 d-flex">
+      <div class="input-group">
+        <div class="form-group">
+          <div class="input-group">
+            <label>À </label>
+            <input class="form-control" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="endDatePModel" ngbDatepicker
+                   #endDate="ngbDatepicker">
+            <div class="input-group-append">
+              <button class="btn btn-outline-secondary" (click)="endDate.toggle()" type="button">
+                <i class="fa fa-calendar" aria-hidden="true"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
+      <div class="col-sm-3">
+        <mat-form-field>
+          <mat-select placeholder="Site de plongée" (selectionChange)="setStatistics($event)">
+            <mat-option *ngFor="let divesite of diveSites" [value]="divesite">
+              {{ divesite.name }}
+            </mat-option>
+            <mat-option  value="tous">Tous</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="col-sm-3">
+        <div class="btn-group" role="group" aria-label="First group">
+          <button type="button" (click)="setStatsDive('d')" class="btn btn-secondary">Jour</button>
+          <button type="button" (click)="setStatsDive('w')" class="btn btn-secondary">Semaine</button>
+          <button type="button" (click)="setStatsDive('m')" class="btn btn-secondary">Mois</button>
+          <button type="button" (click)="setStatsDive('y')" class="btn btn-secondary">Année</button>
+        </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <chart [options]="optionsHours"></chart>
+    </div>
+  </div>
+
+  <!--
+    Statistiques Plongées
+    <div class="row">
+      <div class="col-md-12">
+        <chart [options]="options"></chart>
+      </div>
+    </div>
+    -->
+  <mat-toolbar class="mat-toolbar mat-toolbar-single-row">Sites</mat-toolbar>
   <div class="row">
     <div class="col-md-12">
       <chart [options]="optionsSites"></chart>
     </div>
   </div>
-  Statistiques par Coeur
+  <mat-toolbar class="mat-toolbar mat-toolbar-single-row">Coeurs</mat-toolbar>
   <div class="row">
     <div class="col-md-12">
       <chart [options]="optionsHearts"></chart>
     </div>
   </div>
-</div>
+  <mat-toolbar class="mat-toolbar mat-toolbar-single-row">Type de Plongée</mat-toolbar>
+  <div class="row">
+    <div class="col-md-12">
+      <chart [options]="optionstypeDives"></chart>
+    </div>
+  </div>
+
+
+

@@ -38,3 +38,23 @@ chart {
     max-width: 24%;
   }
 }
+.mat-toolbar {
+  background: 0 0;
+  padding: 0;
+  margin: 8px 0px;
+  height: auto;
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  text-transform: uppercase;
+}
+.mat-toolbar::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: #333;
+  margin-left: 10px;
+}
+.input-group label{
+  margin-right: 5px;
+}
