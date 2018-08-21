@@ -54,8 +54,16 @@ export class UserService {
     return this.http.post<any>(config.serverURL + '/api/users/divehearts/checkpoint', data)
       .toPromise();
   }
+  getDiveTypes(): Promise<any> {
+    return this.http.get<any>(config.serverURL + '/api/dives/typedives')
+      .toPromise();
+  }
   post(data: any): Promise<any> {
     return this.http.post<any>(config.serverURL + '/api/users', data)
+      .toPromise();
+  }
+  postOffense(data: any): Promise<any> {
+    return this.http.post<any>(config.serverURL + '/api/offenses', data)
       .toPromise();
   }
   delete(data: any): Promise<any> {

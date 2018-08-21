@@ -1,44 +1,28 @@
 <div class="grid-container" *ngIf="permits && users && boats">
-  <!--
- <div class="row">
-
-   <div class="col-md-12 filter-dv">
-     <ul class="list-inline">
-       <li class="list-inline-item">Filtrée par :</li>
-       <li class="list-inline-item">
-         <mat-form-field>
-           <mat-select placeholder="Type Plongeur" (selectionChange)="setTypeUser($event)">
-             <mat-option  value="particulier">Particulier</mat-option>
-             <mat-option  value="structure">Structure</mat-option>
-             <mat-option  value="tous">Tous</mat-option>
-           </mat-select>
-         </mat-form-field>
-       </li>
-       <li class="list-inline-item">
-         <mat-form-field>
-           <mat-select placeholder="Coeur Marine" (selectionChange)="setStatisticsByDate($event)">
-             <mat-option  [value]="2017">2017</mat-option>
-             <mat-option  [value]="2018">2018</mat-option>
-             <mat-option  [value]="2019">2019</mat-option>
-             <mat-option  value="tous">Toutes</mat-option>
-           </mat-select>
-         </mat-form-field>
-       </li>
-       <li class="list-inline-item">
-         <mat-form-field>
-           <mat-select placeholder="Site de plongée" (selectionChange)="setStatistics($event)">
-             <mat-option *ngFor="let divesite of diveSites" [value]="divesite">
-               {{ divesite.name }}
-             </mat-option>
-             <mat-option  value="tous">Tous</mat-option>
-           </mat-select>
-         </mat-form-field>
-       </li>
-     </ul>
-   </div>
- </div>
- -->
-  <h1 class="mat-h1">Dashboard</h1>
+  <h1 class="mat-h1">Tableau de bord</h1>
+  <mat-toolbar class="mat-toolbar mat-toolbar-single-row">Filtre</mat-toolbar>
+  <div class="row text-center d-flex">
+  <div class="col-sm-6">
+    <mat-form-field>
+      <mat-select placeholder="Site de plongée" (selectionChange)="setStatisticsSite($event)">
+        <mat-option  value="tous">Tous</mat-option>
+        <mat-option *ngFor="let divesite of diveSites" [value]="divesite">
+          {{ divesite.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+    <div class="col-sm-6">
+      <mat-form-field>
+        <mat-select placeholder="Coeur Marine" (selectionChange)="setStatisticsHeart($event)">
+          <mat-option  value="tous">Tous</mat-option>
+          <mat-option *ngFor="let diveHeart of diveHearts" [value]="diveHeart">
+            {{ diveHeart.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
   <mat-toolbar class="mat-toolbar mat-toolbar-single-row">General</mat-toolbar>
   <div class="row text-center d-flex">
     <div class="col placeholder">
@@ -58,7 +42,7 @@
       <span class="text-muted">Par site</span>
     </div>
     <div class="col placeholder">
-      <h4>{{getHeatsDivesMoy() | number }}</h4>
+      <h4>{{someHeartsDive/diveHearts.length | number }}</h4>
       <span class="text-muted">Par Coeur</span>
     </div>
   </div>
@@ -129,7 +113,7 @@
       <div class="input-group">
         <div class="form-group">
           <div class="input-group">
-            <label>À </label>
+            <label>Au </label>
             <input class="form-control" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="endDatePModel" ngbDatepicker
                    #endDate="ngbDatepicker">
             <div class="input-group-append">
@@ -140,22 +124,24 @@
         </div>
       </div>
       </div>
+    <!--
       <div class="col-sm-3">
         <mat-form-field>
           <mat-select placeholder="Site de plongée" (selectionChange)="setStatistics($event)">
+            <mat-option  value="tous">Tous</mat-option>
             <mat-option *ngFor="let divesite of diveSites" [value]="divesite">
               {{ divesite.name }}
             </mat-option>
-            <mat-option  value="tous">Tous</mat-option>
           </mat-select>
         </mat-form-field>
       </div>
+      -->
       <div class="col-sm-3">
         <div class="btn-group" role="group" aria-label="First group">
-          <button type="button" (click)="setStatsDive('d')" class="btn btn-secondary">Jour</button>
-          <button type="button" (click)="setStatsDive('w')" class="btn btn-secondary">Semaine</button>
-          <button type="button" (click)="setStatsDive('m')" class="btn btn-secondary">Mois</button>
-          <button type="button" (click)="setStatsDive('y')" class="btn btn-secondary">Année</button>
+          <button type="button" (click)="setStatsDive('d')" class="btn btn-secondary">Par Jour</button>
+          <button type="button" (click)="setStatsDive('w')" class="btn btn-secondary">Par Semaine</button>
+          <button type="button" (click)="setStatsDive('m')" class="btn btn-secondary">Par Mois</button>
+          <button type="button" (click)="setStatsDive('y')" class="btn btn-secondary">Par Année</button>
         </div>
     </div>
   </div>
@@ -164,15 +150,6 @@
       <chart [options]="optionsHours"></chart>
     </div>
   </div>
-
-  <!--
-    Statistiques Plongées
-    <div class="row">
-      <div class="col-md-12">
-        <chart [options]="options"></chart>
-      </div>
-    </div>
-    -->
   <mat-toolbar class="mat-toolbar mat-toolbar-single-row">Sites</mat-toolbar>
   <div class="row">
     <div class="col-md-12">

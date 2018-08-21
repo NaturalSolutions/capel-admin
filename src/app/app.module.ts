@@ -34,6 +34,7 @@ import { BoatsComponent } from './boats/boats.component';
 import {TypePermitFormComponent} from './type-permit-form/type-permit-form.component';
 import {TypePermitsComponent} from './type-permits/type-permits.component';
 import {PermitsComponent} from './permits/permits.component';
+import {OffenseComponent} from './offense/offense.component';
 declare var require: any;
 export function highchartsFactory() {
   const hc = require('highcharts/highstock');
@@ -54,7 +55,8 @@ export function highchartsFactory() {
     DialogComponent,
     MoodRendererComponent,
     BoatsComponent,
-    PermitsComponent
+    PermitsComponent,
+    OffenseComponent
   ],
   imports: [
     BrowserModule,
@@ -83,7 +85,8 @@ export function highchartsFactory() {
     ChartModule
   ],
   entryComponents: [
-    DialogComponent
+    DialogComponent,
+    OffenseComponent
   ],
   providers: [
     AuthGuard,

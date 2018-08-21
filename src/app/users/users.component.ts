@@ -5,6 +5,8 @@ import {LoadingDialogComponent} from '../app-dialogs/loading-dialog/loading-dial
 import {MatDialog} from '@angular/material';
 import {DialogComponent} from '../dialog/dialog.component';
 import {ICellRendererAngularComp} from 'ag-grid-angular';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {OffenseComponent} from '../offense/offense.component';
 
 @Component({
   selector: 'app-users',
@@ -24,7 +26,8 @@ export class UsersComponent implements OnInit {
   search_term;
   constructor(private userService: UserService,
               public dialog: MatDialog,
-              private zone: NgZone
+              private zone: NgZone,
+              private modalService: NgbModal
   ) {
     this.gridOptions = <GridOptions>{};
     this.defaultColDef = {
@@ -49,8 +52,10 @@ export class UsersComponent implements OnInit {
       {headerName: 'Catégorie', field: 'category'},
       {headerName: 'Email', field: 'email'},
       {headerName: 'Addresse', field: 'address'},
-      {headerName: 'Boats', field: 'boats'}
+      {headerName: 'Bateaux', field: 'boats'},
+      {headerName: 'Infractions', field: 'offenses'}
     ];
+    this.setUser();
   }
   onSelectionChanged(event) {
     const selectedRows = this.api.getSelectedRows();
@@ -81,6 +86,11 @@ export class UsersComponent implements OnInit {
       }
     });
   }
+  openOffense() {
+    const modalRef = this.modalService.open(OffenseComponent);
+    console.log(this.api.getSelectedNodes()[0].data);
+    modalRef.componentInstance.user = this.api.getSelectedNodes()[0].data;
+  }
   blockUser() {
     const dialog = this.dialog.open(DialogComponent, {
       width: '500px',
@@ -101,6 +111,7 @@ export class UsersComponent implements OnInit {
           console.log(data);
           this.setUser();
           dialogRef.close();
+
         });
       }
     });
@@ -132,13 +143,16 @@ export class UsersComponent implements OnInit {
   onReady(params) {
     this.api = params.api;
     this.columnApi = params.columnApi;
-    this.setUser();
+
 
   }
   ngOnInit() {
 
   }
   setUser() {
+    let loading = this.dialog.open(LoadingDialogComponent, {
+      disableClose: true
+    });
     this.userService.getUsers().then(data => {
       const users = []
       for (const user of data){
@@ -151,9 +165,11 @@ export class UsersComponent implements OnInit {
           email: user.email,
           status: user.status,
           address: user.address,
-          boats: user.boats
+          boats: user.boats,
+          offenses: user.offenses
         });
       }
+      loading.close();
       this.rowData = users;
     });
   }

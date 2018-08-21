@@ -14,32 +14,94 @@ registerLocaleData(localeFr);
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent {
-  nbrDives;
-  nbrUsers;
-  nbrPermits;
-  nbrDivesSites;
+
   options: any;
   optionsSites: any;
   optionsHearts: any;
   optionsHours: any;
   optionsSignatairebyHours: any;
-  users:any[];
-  dives:any[];
-  permits:any[];
+  users: any[];
+  dives: any[];
+  permits: any[];
   boats: any[];
   diveSites: any[];
-  usersSV:any[];
-  divesSV:any[];
-  permitsSV:any[];
+  usersSV: any[];
+  divesSV: any[];
+  permitsSV: any[];
   boatsSV: any[];
   diveHearts: any[];
-  groupedDiveSites:any[];
+  groupedDiveSites: any[];
   groupedDiveHearts: any[] = [];
-  nbrDivesDays:any;
+  nbrDivesDays: any;
   startDatePModel: any = {year: new Date().getFullYear(), month: new Date().getMonth() + 1, day: new Date().getDate() };
   endDatePModel: any = {year: new Date().getFullYear(), month: new Date().getMonth() + 1, day: new Date().getDate() };
-  filredDivebyDate : any[];
-  optionstypeDives:any;
+  someHeartsDive: any = 0;
+  typeDives: any[];
+  optionstypeDives= {
+    chart: {
+      plotBackgroundColor: null,
+      plotBorderWidth: null,
+      plotShadow: false,
+      type: 'pie'
+    },
+    title:
+      {
+        text: 'Nombre de plongée par type de plongée'
+      }
+    ,
+    tooltip: {
+      pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+    }
+    ,
+    plotOptions: {
+      pie: {
+        allowPointSelect: true,
+        cursor
+          :
+          'pointer',
+        dataLabels
+          :
+          {
+            enabled: true,
+            format
+              :
+              '<b>{point.name}</b>: {point.percentage:.1f} %'
+          }
+      }
+    }
+    , series: [{
+      name: 'Plongées',
+      colorByPoint: true,
+      data: [{
+        name: 'Chrome',
+        y: 61.41
+      }, {
+        name: 'Internet Explorer',
+        y: 11.84
+      }, {
+        name: 'Firefox',
+        y: 10.85
+      }, {
+        name: 'Edge',
+        y: 4.67
+      }, {
+        name: 'Safari',
+        y: 4.18
+      }, {
+        name: 'Sogou Explorer',
+        y: 1.64
+      }, {
+        name: 'Opera',
+        y: 1.6
+      }, {
+        name: 'QQ',
+        y: 1.2
+      }, {
+        name: 'Other',
+        y: 2.61
+      }]
+    }]
+  };
   date_options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
   constructor(
     private dashboardService: DashboardService,
@@ -50,6 +112,7 @@ export class DashboardComponent {
     let loading = this.dialog.open(LoadingDialogComponent, {
       disableClose: true
     });
+    /*
     this.dashboardService.getCntDive().then( data => {
       this.nbrDives  = data;
     });
@@ -62,6 +125,10 @@ export class DashboardComponent {
     this.dashboardService.getCntUsers().then( data => {
       this.nbrUsers = data;
     });
+    */
+    this.userService.getDiveTypes().then(data => {
+      this.typeDives = data;
+    })
     this.userService.getUsers().then( data => {
       this.users = data;
       this.usersSV  = data;
@@ -77,12 +144,23 @@ export class DashboardComponent {
       this.fillSiteChart();
       this.fillFrequenceHours('d');
       this.setStatsDive('d');
+      this.fillTypeDiveChart();
       let groupedDiveHeart : any = {};
       groupedDiveHeart.nbrDive = 0;
       groupedDiveHeart.dive_heart = [];
       loading.close();
+      console.log(this.dives);
       this.dashboardService.getDiveHearts().then(datah => {
+
         this.diveHearts = datah;
+        this.fillHearChart();
+        /*
+        for(let diveHeart of this.diveHearts)
+        groupedDiveHeart = {}
+        groupedDiveHeart.nbrDive = this.getNbrDiveInHeart();
+        groupedDiveHeart.dive_heart = itemH;
+        */
+        /*
         for (const grDiveSite of this.groupedDiveSites)
           this.dashboardService.getCheckedPointHearts(
             {
@@ -117,6 +195,7 @@ export class DashboardComponent {
                 }
               }
           })
+          */
 
       })
     })
@@ -133,71 +212,88 @@ export class DashboardComponent {
     this.dashboardService.getDiveSites().then( data => {
       this.diveSites = data;
     });
+    /*
     this.dashboardService.getCntFiltredDive().then( data => {
       this.filredDivebyDate = data;
-      /*
-      const columns = [];
-      const lines = [];
-      const date_options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
-      for (const item of data){
-        columns.push(new Date(item[0]).toLocaleDateString('fr-FR', date_options));
-        lines.push(item[1]);
-      }
-      this.options = {
-        chart: {
-          type: 'areaspline'
-        },
-        title: {
-          text: 'Statistiques du nombre de plongées'
-        },
-        legend: {
-          layout: 'vertical',
-          align: 'left',
-          verticalAlign: 'top',
-          x: 150,
-          y: 100,
-          floating: true,
-          borderWidth: 1
-        },
-        xAxis: {
-          categories: columns
-        },
-        yAxis: {
-          title: {
-            text: 'Capel'
-          }
-        },
-        tooltip: {
-          shared: true,
-          valueSuffix: ' plongées'
-        },
-        credits: {
-          enabled: false
-        },
-        series: [{
-          name: 'Plongées',
-          data: lines
-        }]
-      };
-      */
+
     });
+    */
 
   }
-  getHeatsDivesMoy() {
-    let nbr = 0;
-    for(let groupedDiveheart of this.groupedDiveHearts) {
-      nbr += groupedDiveheart.nbrDive;
+  fillAllChart(){
+    this.groupeDives_naive();
+    this.fillSiteChart();
+    this.fillFrequenceHours('d');
+    this.setStatsDive('d');
+    this.fillTypeDiveChart();
+    this.fillHearChart();
+  }
+  fillTypeDiveChart(){
+    let data = [];
+    for(let typeDive of this.typeDives){
+      let cnt = 0;
+      for(let dive of this.dives){
+        for(let divetypedive of dive.divetypedives)
+          if(divetypedive.typeDive.id === typeDive.id)
+            cnt++;
+      }
+      data.push({name: typeDive.name,y: cnt});
     }
-
-    return nbr/this.diveHearts.length;
-
+    this.optionstypeDives = {
+      chart: {
+        plotBackgroundColor: null,
+        plotBorderWidth: null,
+        plotShadow: false,
+        type: 'pie'
+      },
+      title:
+        {
+          text: 'Nombre de plongée par type de plongée'
+        }
+      ,
+      tooltip: {
+        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+      }
+      ,
+      plotOptions: {
+        pie: {
+          allowPointSelect: true,
+          cursor
+            :
+            'pointer',
+          dataLabels
+            :
+            {
+              enabled: true,
+              format
+                :
+                '<b>{point.name}</b>: {point.percentage:.1f} %'
+            }
+        }
+      }
+      , series: [{
+        name: 'Plongées',
+        colorByPoint: true,
+        data: data
+      }]
+    };
+  }
+  getNbrDiveInHeart(heart){
+    let nbr = 0;
+    for(const gDiveSite of this.groupedDiveSites){
+      if(gDiveSite.dive.dive_site.heart_id === heart.id) {
+        nbr += gDiveSite.dives.length;
+        this.someHeartsDive += gDiveSite.dives.length;
+      }
+    }
+    return nbr;
   }
   fillHearChart() {
     const columns = [];
     const lines = [];
-    for (const item of this.groupedDiveHearts){
-      columns.push(item.dive_heart.name);
-      lines.push(item.nbrDive);
+    for (const item of this.diveHearts){
+      columns.push(item.name);
+      lines.push(this.getNbrDiveInHeart(item));
     }
     this.optionsHearts = {
       chart: {
@@ -277,8 +373,8 @@ export class DashboardComponent {
     }
     return cnt;
   }
-  setStatistics(event) {
-    console.log(event.value);
+  setStatisticsSite(event) {
+    this.someHeartsDive = 0;
     if (event.value === 'tous') {
       this.dives = this.divesSV;
     } else {
@@ -287,11 +383,23 @@ export class DashboardComponent {
           return dive;
       });
     }
+    this.fillAllChart();
+  }
+  setStatisticsHeart(event) {
+    this.someHeartsDive = 0;
+    if (event.value === 'tous') {
+      this.dives = this.divesSV;
+    } else {
+      this.dives =  this.divesSV.filter(dive => {
+        if (dive.dive_site.heart_id == event.value.id)
+          return dive;
+      });
+    }
+    this.fillAllChart();
   }
 
   fillFrequenceHours(key: any) {
-    console.log(this.dives);
-    console.log(this.divesSV);
+
     const startDateP = new Date('' + this.startDatePModel.year + '-' + this.startDatePModel.month + '-' + this.startDatePModel.day);
     const endDateP = new Date('' + this.endDatePModel.year + '-' + this.endDatePModel.month + '-' + this.endDatePModel.day);
     const columns = [];
@@ -388,7 +496,6 @@ export class DashboardComponent {
     };
   }
   setStatsDive(key: any){
-    console.log(this.startDatePModel);
     this.fillFrequenceHours(key);
   }
   fillFrequenceSignataire(key:any) {
@@ -488,14 +595,14 @@ export class DashboardComponent {
         return dive.dive_site.id === groupedDive.dive.dive_site.id;
       })
       if (exists)
-        obj.dives.push(dive)
+        exists.dives.push(dive)
       else {
         obj.dive = dive;
         this.groupedDiveSites.push(obj);
       }
     }
   }
-  getCntUsersByType(users:any[], type: any){
+  getCntUsersByType(users: any[], type: any) {
     const usersCnt = users.filter(user => {
       if ( user.category === type ) {
         return user;
