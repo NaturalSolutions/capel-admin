@@ -1,6 +1,5 @@
-<div class="grid-container" *ngIf="permits && users && boats">
+<div class="grid-container" *ngIf="permits && users && boats && diveHearts && groupedDiveSites">
   <h1 class="mat-h1">Tableau de bord</h1>
-  <mat-toolbar class="mat-toolbar mat-toolbar-single-row">Filtre</mat-toolbar>
   <div class="row text-center d-flex">
   <div class="col-sm-6">
     <mat-form-field>
@@ -23,18 +22,18 @@
       </mat-form-field>
     </div>
   </div>
-  <mat-toolbar class="mat-toolbar mat-toolbar-single-row">General</mat-toolbar>
+  <mat-toolbar class="mat-toolbar mat-toolbar-single-row">Taux de fréquentation</mat-toolbar>
   <div class="row text-center d-flex">
     <div class="col placeholder">
       <h4>{{dives.length/nbrDivesDays | number}}</h4>
       <span class="text-muted">Par Jour</span>
     </div>
     <div class="col placeholder">
-      <h4>{{dives.length/(nbrDivesDays / 30) | number}}</h4>
+      <h4>{{dives.length/(nbrDivesDays * 30) | number}}</h4>
       <span class="text-muted">Par mois</span>
     </div>
     <div class="col placeholder">
-      <h4>{{dives.length/(nbrDivesDays / 365) | number}}</h4>
+      <h4>{{dives.length/(nbrDivesDays * 365) | number}}</h4>
       <span class="text-muted">Par Année</span>
     </div>
     <div class="col placeholder">
@@ -54,10 +53,6 @@
       <span class="text-muted">Plongeurs</span>
     </div>
     <div class="col-sm-3 placeholder">
-      <h4>{{boats.length}}</h4>
-      <span class="text-muted">Bateaux</span>
-    </div>
-    <div class="col-sm-3 placeholder">
       <h4>{{getCntUsersByType(users, 'structure')}}</h4>
       <span class="text-muted">Structures</span>
     </div>
@@ -65,15 +60,15 @@
       <h4>{{getCntUsersByType(users, 'particulier')}}</h4>
       <span class="text-muted">Particuliers</span>
     </div>
+    <div class="col-sm-3 placeholder">
+      <h4>{{boats.length}}</h4>
+      <span class="text-muted">Bateaux</span>
+    </div>
   </div>
   <div class="row text-center d-flex">
     <div class="col-sm-3 placeholder">
       <h4>{{permits.length}}</h4>
       <span class="text-muted">Signataires</span>
-    </div>
-    <div class="col-sm-3 placeholder">
-      <h4>{{getCntPermit('boats')}}</h4>
-      <span class="text-muted">Bateaux</span>
     </div>
     <div class="col-sm-3 placeholder">
       <h4>{{getCntPermit('structure')}}</h4>
@@ -83,12 +78,18 @@
       <h4>{{getCntPermit('particulier')}}</h4>
       <span class="text-muted">Particuliers</span>
     </div>
+    <div class="col-sm-3 placeholder">
+      <h4>{{getCntPermit('boats')}}</h4>
+      <span class="text-muted">Bateaux</span>
+    </div>
   </div>
+  <!--
   <div class="row">
     <div class="col-md-12">
       <chart [options]="optionsSignatairebyHours"></chart>
     </div>
   </div>
+  -->
 
   <mat-toolbar class="mat-toolbar mat-toolbar-single-row">Plongées</mat-toolbar>
   <div class="row text-center d-flex">
@@ -136,7 +137,7 @@
         </mat-form-field>
       </div>
       -->
-      <div class="col-sm-3">
+      <div class="col-sm-6 text-right">
         <div class="btn-group" role="group" aria-label="First group">
           <button type="button" (click)="setStatsDive('d')" class="btn btn-secondary">Par Jour</button>
           <button type="button" (click)="setStatsDive('w')" class="btn btn-secondary">Par Semaine</button>

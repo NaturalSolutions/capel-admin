@@ -19,7 +19,7 @@ import {MatSnackBar} from '@angular/material';
     <div class="modal-body">
       <form [formGroup]="offenseForm">
         <div class="form-group">
-          <label>Date de Debut</label>
+          <label>Date de Début</label>
           <div class="input-group">
             <input class="form-control" placeholder="yyyy-mm-dd" name="dp1" formControlName="start_at" ngbDatepicker #startDate="ngbDatepicker">
             <div class="input-group-append">
@@ -39,17 +39,14 @@ import {MatSnackBar} from '@angular/material';
           </div>
         </div>
         <div class="form-group">
-          <label for="exampleSelect1">Status</label>
+          <label for="exampleSelect1">Statut</label>
           <select class="form-control" id="exampleSelect1" formControlName="status">
             <option value="enabled">Activé</option>
-            <option value="disabled">Disactivé</option>
+            <option value="disabled">Désactivé</option>
           </select>
         </div>
         <button (click)="save()" class="btn btn-primary"> Enregistrer </button>
       </form>
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-outline-dark" (click)="activeModal.close('Close click')">Fermer</button>
     </div>
   `
 })

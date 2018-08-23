@@ -2,7 +2,7 @@ import {Component, NgZone, OnInit, ViewChild} from '@angular/core';
 import {UserService} from '../services/user.service';
 import {ColumnApi, GridApi, GridOptions} from 'ag-grid';
 import {LoadingDialogComponent} from '../app-dialogs/loading-dialog/loading-dialog.component';
-import {MatDialog} from '@angular/material';
+import {MatDialog, MatSnackBar} from '@angular/material';
 import {DialogComponent} from '../dialog/dialog.component';
 import {ICellRendererAngularComp} from 'ag-grid-angular';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
@@ -19,15 +19,18 @@ export class UsersComponent implements OnInit {
    columnApi: ColumnApi;
    columnDefs;
    defaultColDef;
-   rowData = [];
-   boats = []
-  date_options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
-  search_date;
-  search_term;
+   rowData = []
+   boats = [];
+   users;
+   date_options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
+   search_date;
+   search_term;
+   usersSv;
   constructor(private userService: UserService,
               public dialog: MatDialog,
               private zone: NgZone,
-              private modalService: NgbModal
+              private modalService: NgbModal,
+              private snackBar: MatSnackBar
   ) {
     this.gridOptions = <GridOptions>{};
     this.defaultColDef = {
@@ -52,16 +55,21 @@ export class UsersComponent implements OnInit {
       {headerName: 'Catégorie', field: 'category'},
       {headerName: 'Email', field: 'email'},
       {headerName: 'Addresse', field: 'address'},
-      {headerName: 'Bateaux', field: 'boats'},
+      /*{headerName: 'Bateaux', field: 'boats'},*/
       {headerName: 'Infractions', field: 'offenses'}
     ];
     this.setUser();
   }
   onSelectionChanged(event) {
     const selectedRows = this.api.getSelectedRows();
+    let user;
     for (const selectedRow of selectedRows){
-      console.log(selectedRow);
-      this.boats = selectedRow.boats;
+      for(const userN of this.users) {
+        if (userN.id == selectedRow.id)
+          user = userN
+      }
+      if(user)
+      this.boats = user.boats;
       console.log(this.boats);
     }
   }
@@ -87,9 +95,20 @@ export class UsersComponent implements OnInit {
     });
   }
   openOffense() {
-    const modalRef = this.modalService.open(OffenseComponent);
-    console.log(this.api.getSelectedNodes()[0].data);
-    modalRef.componentInstance.user = this.api.getSelectedNodes()[0].data;
+    if(this.api.getSelectedNodes().length > 0) {
+      const modalRef = this.modalService.open(OffenseComponent);
+      console.log(this.api.getSelectedNodes()[0].data);
+      let user = {}
+      for (const userN of this.users) {
+        if (userN.id == this.api.getSelectedNodes()[0].data.id)
+          user = userN
+      }
+      modalRef.componentInstance.user = user;
+    }else{
+      this.snackBar.open('Veuillez sélectionner un utilisateur','ok', {
+        duration: 3000
+      });
+    }
   }
   blockUser() {
     const dialog = this.dialog.open(DialogComponent, {
@@ -115,6 +134,14 @@ export class UsersComponent implements OnInit {
         });
       }
     });
+  }
+  exporter() {
+    let exportParams = {
+      skipHeader: false,
+      allColumns: true,
+      fileName: 'capel-plongeurs.csv'
+    };
+    this.api.exportDataAsCsv(exportParams);
   }
   unblockUsers() {
     const dialog = this.dialog.open(DialogComponent, {
@@ -154,9 +181,12 @@ export class UsersComponent implements OnInit {
       disableClose: true
     });
     this.userService.getUsers().then(data => {
+      this.users = data;
+      this.usersSv = data;
       const users = []
       for (const user of data){
-        users.push({id: user.id,
+        users.push({
+          id: user.id,
           lastname: user.lastname,
           firstname: user.firstname,
           category: user.category,
@@ -165,8 +195,9 @@ export class UsersComponent implements OnInit {
           email: user.email,
           status: user.status,
           address: user.address,
-          boats: user.boats,
-          offenses: user.offenses
+          offenses: user.offenses.length > 0 ? new Date(user.offenses[0].start_at).toLocaleDateString('fr-FR', this.date_options)
+            + ' - '+ new Date(user.offenses[0].end_at).toLocaleDateString('fr-FR', this.date_options):''
+
         });
       }
       loading.close();
@@ -175,6 +206,26 @@ export class UsersComponent implements OnInit {
   }
   onEnter(value: any) {
     this.search_term = value;
+  }
+  annuler() {
+    const users = []
+    for (const user of this.usersSv){
+      users.push({
+        id: user.id,
+        lastname: user.lastname,
+        firstname: user.firstname,
+        category: user.category,
+        created_at: new Date(user.created_at).toLocaleDateString('fr-FR', this.date_options),
+        review: user.review,
+        email: user.email,
+        status: user.status,
+        address: user.address,
+        offenses: user.offenses.length > 0 ? new Date(user.offenses[0].start_at).toLocaleDateString('fr-FR', this.date_options)
+          + ' - '+ new Date(user.offenses[0].end_at).toLocaleDateString('fr-FR', this.date_options):''
+
+      });
+    }
+    this.rowData = users;
   }
   filtre() {
     this.userService.searchUsers({'search_date' : this.search_date, 'search_tearm': this.search_term}).then(data => {

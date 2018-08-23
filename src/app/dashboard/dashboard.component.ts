@@ -33,6 +33,7 @@ export class DashboardComponent {
   groupedDiveSites: any[];
   groupedDiveHearts: any[] = [];
   nbrDivesDays: any;
+
   startDatePModel: any = {year: new Date().getFullYear(), month: new Date().getMonth() + 1, day: new Date().getDate() };
   endDatePModel: any = {year: new Date().getFullYear(), month: new Date().getMonth() + 1, day: new Date().getDate() };
   someHeartsDive: any = 0;
@@ -109,6 +110,10 @@ export class DashboardComponent {
     public dialog: MatDialog,
   )
   {
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - 7);// show stats of last 7 days
+    this.startDatePModel = {year: startDate.getFullYear(), month: startDate.getMonth() + 1, day: startDate.getDate() };
+
     let loading = this.dialog.open(LoadingDialogComponent, {
       disableClose: true
     });
@@ -135,21 +140,21 @@ export class DashboardComponent {
     })
     this.dashboardService.getDives().then( data => {
       this.dives = data;
-      let date1 = new Date(this.dives[0].divingDate);
-      let date2 = new Date(this.dives[this.dives.length - 1].divingDate);
-      let timeDiff = Math.abs(date2.getTime() - date1.getTime());
-      this.nbrDivesDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+      let first_date = new Date(this.dives[0].divingDate);
+      let last_date = new Date(this.dives[this.dives.length - 1].divingDate);
+      let timeDiff = Math.abs(last_date.getTime() - first_date.getTime());
+      this.nbrDivesDays = (timeDiff / (1000*60*60*24));
+      console.log(this.nbrDivesDays);
       this.divesSV = data;
       this.groupeDives_naive();
       this.fillSiteChart();
       this.fillFrequenceHours('d');
-      this.setStatsDive('d');
+      this.setStatsDive('w');
       this.fillTypeDiveChart();
       let groupedDiveHeart : any = {};
       groupedDiveHeart.nbrDive = 0;
       groupedDiveHeart.dive_heart = [];
       loading.close();
-      console.log(this.dives);
       this.dashboardService.getDiveHearts().then(datah => {
 
         this.diveHearts = datah;
@@ -328,6 +333,7 @@ export class DashboardComponent {
       },
       series: [{
         name: 'Plongées',
+        showInLegend: false,
         data: lines
       }]
     };
@@ -491,6 +497,7 @@ export class DashboardComponent {
       },
       series: [{
         name: 'Plongées',
+        showInLegend: false,
         data: lines
       }]
     };
@@ -510,7 +517,7 @@ export class DashboardComponent {
         type: 'areaspline'
       },
       title: {
-        text: 'Statistiques du nombre de signataire'
+        text: 'Statistiques du nombre de signataires'
       },
       legend: {
         layout: 'vertical',
@@ -538,6 +545,7 @@ export class DashboardComponent {
       },
       series: [{
         name: 'Signataires',
+        showInLegend: false,
         data: lines
       }]
     };
@@ -582,6 +590,7 @@ export class DashboardComponent {
       },
       series: [{
         name: 'Plongées',
+        showInLegend: false,
         data: lines
       }]
     };
