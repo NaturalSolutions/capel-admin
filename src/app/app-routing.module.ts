@@ -8,6 +8,7 @@ import {DivesComponent} from './dives/dives.component';
 import {TypePermitsComponent} from './type-permits/type-permits.component';
 import {PermitsComponent} from './permits/permits.component';
 import {TypePermitFormComponent} from './type-permit-form/type-permit-form.component';
+import {ExportComponent} from './export/export.component';
 
 const routes: Routes = [
   {
@@ -37,6 +38,11 @@ const routes: Routes = [
   }, {
     path: 'permits',
     component: PermitsComponent,
+    canActivate: [AuthGuard]
+  }
+  , {
+    path: 'export',
+    component: ExportComponent,
     canActivate: [AuthGuard]
   }, {
     path: '**',

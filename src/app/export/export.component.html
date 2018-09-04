@@ -1,0 +1,30 @@
+<div class="form-inline">
+  <div class="row">
+    <div class="col">
+    <div class="form-group">
+      <label for="exampleSelect1">Table </label>
+      <select class="form-control" id="exampleSelect1" (change)="onChange($event.target.value)">
+        <option value="dives">Plongées</option>
+        <option value="allDivers">Plongeurs(Tous)</option>
+        <option value="parDivers">Plongeurs(Particuliers)</option>
+        <option value="structDivers">Plongeurs(Structures)</option>
+      </select>
+    <button (click)="export()" class="btn btn-info btn-filt">Exporter</button>
+    </div>
+  </div>
+  </div>
+</div>
+<ag-grid-angular
+  style="width: 100%; height: 600px;"
+  class="ag-theme-balham"
+  [enableSorting]="true"
+  [enableFilter]="true"
+  [rowData]="rowData"
+  [columnDefs]="columnDefs"
+  rowSelection="multiple"
+  (gridReady)="onReady($event)"
+  [defaultColDef]="defaultColDef"
+  [paginationAutoPageSize]="true"
+  [pagination]="true"
+>
+

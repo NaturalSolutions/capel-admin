@@ -35,6 +35,7 @@ import {TypePermitFormComponent} from './type-permit-form/type-permit-form.compo
 import {TypePermitsComponent} from './type-permits/type-permits.component';
 import {PermitsComponent} from './permits/permits.component';
 import {OffenseComponent} from './offense/offense.component';
+import { ExportComponent } from './export/export.component';
 declare var require: any;
 export function highchartsFactory() {
   const hc = require('highcharts/highstock');
@@ -56,7 +57,8 @@ export function highchartsFactory() {
     MoodRendererComponent,
     BoatsComponent,
     PermitsComponent,
-    OffenseComponent
+    OffenseComponent,
+    ExportComponent
   ],
   imports: [
     BrowserModule,

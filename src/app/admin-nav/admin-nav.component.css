@@ -6,3 +6,12 @@
   width: 200px;
   box-shadow: 3px 0 6px rgba(0,0,0,.24);
 }
+img {
+  width: auto;
+  height: 70%;
+
+}
+.mat-toolbar.mat-primary {
+  background: #ede8e2;
+  color: #000;
+}

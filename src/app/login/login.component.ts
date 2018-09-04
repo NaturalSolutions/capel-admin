@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import {UserService} from '../services/user.service';
 import {SessionActionsService} from '../store/session/session-actions.service';
 import * as _ from 'lodash';
-import {MatDialog, MatSnackBar} from '@angular/material';
+import {MatDialog, MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition} from '@angular/material';
 import { LoadingDialogComponent } from '../app-dialogs/loading-dialog/loading-dialog.component';
 
 @Component({
@@ -17,6 +17,8 @@ export class LoginComponent implements OnInit {
 
   fg:FormGroup;
   setPass=false;
+  horizontalPosition: MatSnackBarHorizontalPosition = 'center';
+  verticalPosition: MatSnackBarVerticalPosition = 'top';
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -40,6 +42,15 @@ export class LoginComponent implements OnInit {
     if(!this.setPass) {
       this.userService.login(this.fg.value).then(data => {
           dialogRef.close();
+          console.log(data);
+          if(data.profile.role !== 'admin'){
+            this.snackBar.open("vous devez disposer des droits d'administrateur pour se connecter a cet espace", "OK", {
+              duration: 5000,
+              horizontalPosition: this.horizontalPosition,
+              verticalPosition: this.verticalPosition,
+            });
+            return;
+          }
           this.sessionActionsService.open(data);
           this.router.navigate(['/dashboard']);
         }, error => {
