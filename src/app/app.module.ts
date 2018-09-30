@@ -23,7 +23,7 @@ import { AdminNavComponent } from './admin-nav/admin-nav.component';
 import { UsersComponent, MoodRendererComponent} from './users/users.component';
 import { DivesComponent } from './dives/dives.component';
 import {AgGridModule} from 'ag-grid-angular';
-import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {NgbDateParserFormatter, NgbDatepickerI18n, NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {LeafletModule} from '@asymmetrik/ngx-leaflet';
 import {LeafletMarkerClusterModule} from '@asymmetrik/ngx-leaflet-markercluster';
 import {PermitService} from './services/permit.service';
@@ -36,6 +36,7 @@ import {TypePermitsComponent} from './type-permits/type-permits.component';
 import {PermitsComponent} from './permits/permits.component';
 import {OffenseComponent} from './offense/offense.component';
 import { ExportComponent } from './export/export.component';
+import {CustomDatepickerI18n, I18n} from './config/ng-bootstrap-datepicker-i18n';
 declare var require: any;
 export function highchartsFactory() {
   const hc = require('highcharts/highstock');
@@ -103,7 +104,9 @@ export function highchartsFactory() {
     {
       provide: HighchartsStatic,
       useFactory: highchartsFactory
-    }
+    },
+    I18n,
+    {provide: NgbDatepickerI18n, useClass: CustomDatepickerI18n}
   ],
   bootstrap: [AppComponent]
 })

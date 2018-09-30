@@ -1,6 +1,7 @@
 <div class="grid-container" *ngIf="permits && users && boats && diveHearts && groupedDiveSites">
   <h1 class="mat-h1">Tableau de bord</h1>
   <div class="row text-center d-flex">
+    <!--
   <div class="col-sm-6">
     <mat-form-field>
       <mat-select placeholder="Site de plongée" (selectionChange)="setStatisticsSite($event)">
@@ -13,13 +14,59 @@
   </div>
     <div class="col-sm-6">
       <mat-form-field>
-        <mat-select placeholder="Coeur Marine" (selectionChange)="setStatisticsHeart($event)">
+        <mat-select placeholder="Coeur Marin" (selectionChange)="setStatisticsHeart($event)">
           <mat-option  value="tous">Tous</mat-option>
           <mat-option *ngFor="let diveHeart of diveHearts" [value]="diveHeart">
             {{ diveHeart.name }}
           </mat-option>
         </mat-select>
       </mat-form-field>
+    </div>
+   -->
+    <div class="col placeholder">
+    <ul class="list-inline">
+      <li class="list-inline-item">Filtres :</li>
+      <li class="list-inline-item">
+        <mat-form-field>
+          <mat-select placeholder="Zone" [(ngModel)]="fl_heart" (selectionChange)="setStatistics($event)">
+            <mat-option  value="tous">“PNPC” (ensemble du territoire du parc)</mat-option>
+            <mat-option  value="tous">'Coeurs' (Port-Cros + Porquerolles) </mat-option>
+            <mat-option *ngFor="let dive_heart of diveHearts" [value]="dive_heart">
+              {{ dive_heart.name }}
+            </mat-option>
+            <mat-option  value="null">AMA</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </li>
+      <li class="list-inline-item">
+        <mat-form-field>
+          <mat-select placeholder="Site de plongée" [(ngModel)]="fl_site" (selectionChange)="setStatistics($event)">
+            <mat-option  value="tous">Tous les sites</mat-option>
+            <mat-option *ngFor="let divesite of diveSites" [value]="divesite">
+              {{ divesite.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </li>
+      <li class="list-inline-item">
+        <mat-form-field>
+          <mat-select placeholder="Année" [(ngModel)]="fl_year" (selectionChange)="setStatistics($event)">
+            <mat-option  [value]="2018">2018</mat-option>
+            <mat-option  [value]="2019">2019</mat-option>
+            <mat-option  value="tous">Toutes</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </li>
+      <li class="list-inline-item">
+        <mat-form-field>
+          <mat-select placeholder="Utilisateur" [(ngModel)]="fl_user" (selectionChange)="setStatistics($event)">
+            <mat-option  value="particulier">particulier</mat-option>
+            <mat-option  value="structure">structure</mat-option>
+            <mat-option  value="tous">(particulier+structure)</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </li>
+    </ul>
     </div>
   </div>
   <mat-toolbar class="mat-toolbar mat-toolbar-single-row">Taux de fréquentation</mat-toolbar>
@@ -37,7 +84,7 @@
       <span class="text-muted">Par Année</span>
     </div>
     <div class="col placeholder">
-      <h4>{{dives.length/groupedDiveSites.length | number}}</h4>
+      <h4>{{((dives.length/groupedDiveSites.length)?(dives.length/groupedDiveSites.length):0) | number}}</h4>
       <span class="text-muted">Par site</span>
     </div>
     <div class="col placeholder">

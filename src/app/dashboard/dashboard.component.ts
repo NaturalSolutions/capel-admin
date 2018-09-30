@@ -104,6 +104,11 @@ export class DashboardComponent {
     }]
   };
   date_options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
+  fl_heart: any = 'tous';
+  fl_month: any = 'tous';
+  fl_year: any = 'tous';
+  fl_site: any = 'tous';
+  fl_user: any = 'tous';
   constructor(
     private dashboardService: DashboardService,
     private userService: UserService,
@@ -117,29 +122,29 @@ export class DashboardComponent {
     let loading = this.dialog.open(LoadingDialogComponent, {
       disableClose: true
     });
-    /*
-    this.dashboardService.getCntDive().then( data => {
-      this.nbrDives  = data;
-    });
-    this.dashboardService.getCntDiveSites().then( data => {
-      this.nbrDivesSites = data;
-    });
-    this.dashboardService.getCntPermits().then( data => {
-      this.nbrPermits = data;
-    });
-    this.dashboardService.getCntUsers().then( data => {
-      this.nbrUsers = data;
-    });
-    */
-    this.userService.getDiveTypes().then(data => {
-      this.typeDives = data;
-    })
     this.userService.getUsers().then( data => {
       this.users = data;
       this.usersSV  = data;
     })
+    this.dashboardService.getPermits().then( data => {
+      this.permits = data;
+      this.permitsSV = data;
+      this.fillFrequenceSignataire('d');
+    })
+    this.dashboardService.getBoats().then( data => {
+      this.boats = data;
+      this.boatsSV = data;
+
+    })
+    this.dashboardService.getDiveSites().then( data => {
+      this.diveSites = data;
+    });
+    this.userService.getDiveTypes().then(data => {
+      this.typeDives = data;
+    })
     this.dashboardService.getDives().then( data => {
       this.dives = data;
+      console.log(data);
       let first_date = new Date(this.dives[0].divingDate);
       let last_date = new Date(this.dives[this.dives.length - 1].divingDate);
       let timeDiff = Math.abs(last_date.getTime() - first_date.getTime());
@@ -159,64 +164,9 @@ export class DashboardComponent {
 
         this.diveHearts = datah;
         this.fillHearChart();
-        /*
-        for(let diveHeart of this.diveHearts)
-        groupedDiveHeart = {}
-        groupedDiveHeart.nbrDive = this.getNbrDiveInHeart();
-        groupedDiveHeart.dive_heart = itemH;
-        */
-        /*
-        for (const grDiveSite of this.groupedDiveSites)
-          this.dashboardService.getCheckedPointHearts(
-            {
-            'lat': grDiveSite.dive.dive_site.latitude,
-            'lng': grDiveSite.dive.dive_site.longitude
-            })
-            .then(dataHearts => {
-              for(let itemH of dataHearts){
-                let exists = this.groupedDiveHearts.filter(item => {
-                  if(item.dive_hearts && itemH)
-                  return item.dive_hearts.id === itemH.id;
-                  else return []
-                })
-                if(exists.length > 0) {
-                  groupedDiveHeart.nbrDive += grDiveSite.dives.length;
-                }else {
-                  groupedDiveHeart = {}
-                  groupedDiveHeart.nbrDive = grDiveSite.dives.length + 1;
-                  groupedDiveHeart.dive_heart = itemH;
-                  this.groupedDiveHearts.push(groupedDiveHeart);
-                  for(let item of datah ) {
-                    groupedDiveHeart = {}
-                    groupedDiveHeart.nbrDive = 0;
-                    groupedDiveHeart.dive_heart = item;
-                    let exists = this.groupedDiveHearts.filter(itemH =>{
-                      return itemH.dive_heart.id === item.id;
-                    })
-                    if( exists.length === 0 )
-                    this.groupedDiveHearts.push(groupedDiveHeart);
-                  }
-                  this.fillHearChart();
-                }
-              }
-          })
-          */
-
       })
     })
-    this.dashboardService.getPermits().then( data => {
-      this.permits = data;
-      this.permitsSV = data;
-      this.fillFrequenceSignataire('d');
-    })
-    this.dashboardService.getBoats().then( data => {
-      this.boats = data;
-      this.boatsSV = data;
 
-    })
-    this.dashboardService.getDiveSites().then( data => {
-      this.diveSites = data;
-    });
     /*
     this.dashboardService.getCntFiltredDive().then( data => {
       this.filredDivebyDate = data;
@@ -321,7 +271,7 @@ export class DashboardComponent {
       },
       yAxis: {
         title: {
-          text: 'Capel'
+          text: 'Nombre de plongée'
         }
       },
       tooltip: {
@@ -379,16 +329,21 @@ export class DashboardComponent {
     }
     return cnt;
   }
-  setStatisticsSite(event) {
+  setStatistics(event) {
     this.someHeartsDive = 0;
-    if (event.value === 'tous') {
-      this.dives = this.divesSV;
-    } else {
-      this.dives =  this.divesSV.filter(dive => {
-        if (dive.dive_site.id == event.value.id)
-          return dive;
-      });
-    }
+    this.dives = this.divesSV;
+    this.dives =  this.divesSV.filter(dive => {
+      if (
+        (this.fl_site !== 'tous' ? this.fl_site.id === dive.dive_site.id : true)
+        &&
+        (this.fl_heart !== 'tous' ? this.fl_heart.id === dive.dive_site.heart_id : true)
+        &&
+        (this.fl_year !== 'tous' ? new Date(dive.divingDate).getFullYear() === this.fl_year : true)
+        &&
+        (this.fl_year !== 'tous' ? dive.user.category === this.fl_user : true)
+      )
+        return dive;
+    });
     this.fillAllChart();
   }
   setStatisticsHeart(event) {
@@ -485,12 +440,12 @@ export class DashboardComponent {
       },
       yAxis: {
         title: {
-          text: 'Capel'
+          text: 'Nombre de plongée'
         }
       },
       tooltip: {
         shared: true,
-        valueSuffix: ' plongées'
+        valueSuffix: 'plongées'
       },
       credits: {
         enabled: false
@@ -533,7 +488,7 @@ export class DashboardComponent {
       },
       yAxis: {
         title: {
-          text: 'Capel'
+          text: 'Nombre de signataire'
         }
       },
       tooltip: {
@@ -578,7 +533,7 @@ export class DashboardComponent {
       },
       yAxis: {
         title: {
-          text: 'Capel'
+          text: 'Nombre de plongée'
         }
       },
       tooltip: {
