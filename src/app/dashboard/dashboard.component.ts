@@ -340,7 +340,7 @@ export class DashboardComponent {
         &&
         (this.fl_year !== 'tous' ? new Date(dive.divingDate).getFullYear() === this.fl_year : true)
         &&
-        (this.fl_year !== 'tous' ? dive.user.category === this.fl_user : true)
+        (this.fl_user !== 'tous' ? dive.user.category === this.fl_user : true)
       )
         return dive;
     });

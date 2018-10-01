@@ -1,6 +1,6 @@
 <div class="grid-container" *ngIf="permits && users && boats && diveHearts && groupedDiveSites">
   <h1 class="mat-h1">Tableau de bord</h1>
-  <div class="row text-center d-flex">
+  <div class="row text-center d-flex placeholdergit">
     <!--
   <div class="col-sm-6">
     <mat-form-field>
@@ -23,10 +23,8 @@
       </mat-form-field>
     </div>
    -->
-    <div class="col placeholder">
-    <ul class="list-inline">
-      <li class="list-inline-item">Filtres :</li>
-      <li class="list-inline-item">
+      Filtres :
+      <div class="col-sm-3">
         <mat-form-field>
           <mat-select placeholder="Zone" [(ngModel)]="fl_heart" (selectionChange)="setStatistics($event)">
             <mat-option  value="tous">“PNPC” (ensemble du territoire du parc)</mat-option>
@@ -37,8 +35,8 @@
             <mat-option  value="null">AMA</mat-option>
           </mat-select>
         </mat-form-field>
-      </li>
-      <li class="list-inline-item">
+      </div>
+    <div class="col-sm-3">
         <mat-form-field>
           <mat-select placeholder="Site de plongée" [(ngModel)]="fl_site" (selectionChange)="setStatistics($event)">
             <mat-option  value="tous">Tous les sites</mat-option>
@@ -47,8 +45,8 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
-      </li>
-      <li class="list-inline-item">
+      </div>
+    <div class="col-sm-3">
         <mat-form-field>
           <mat-select placeholder="Année" [(ngModel)]="fl_year" (selectionChange)="setStatistics($event)">
             <mat-option  [value]="2018">2018</mat-option>
@@ -56,8 +54,8 @@
             <mat-option  value="tous">Toutes</mat-option>
           </mat-select>
         </mat-form-field>
-      </li>
-      <li class="list-inline-item">
+        </div>
+    <div class="col-sm-3">
         <mat-form-field>
           <mat-select placeholder="Utilisateur" [(ngModel)]="fl_user" (selectionChange)="setStatistics($event)">
             <mat-option  value="particulier">particulier</mat-option>
@@ -65,9 +63,7 @@
             <mat-option  value="tous">(particulier+structure)</mat-option>
           </mat-select>
         </mat-form-field>
-      </li>
-    </ul>
-    </div>
+        </div>
   </div>
   <mat-toolbar class="mat-toolbar mat-toolbar-single-row">Taux de fréquentation</mat-toolbar>
   <div class="row text-center d-flex">
