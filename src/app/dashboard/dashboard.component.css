@@ -58,3 +58,7 @@ chart {
 .input-group label{
   margin-right: 5px;
 }
+::ng-deep .mat-select-content{
+  width: 320px;
+  overflow-y:hidden !important;
+}

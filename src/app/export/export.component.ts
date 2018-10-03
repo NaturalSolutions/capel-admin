@@ -17,19 +17,31 @@ export class ExportComponent implements OnInit {
   columnDefs;
   defaultColDef;
   rowData = []
+  diveHearts
   date_options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
   constructor(
     private  dashboardService: DashboardService,
     private userService: UserService,
     private dialog: MatDialog
-  ) { }
+  ) {
+    this.dashboardService.getDiveHearts().then(data => {
+      this.diveHearts = data;
+    });
+  }
 
   ngOnInit() {
-    this.setDives();
+    this.setUsers('all');
   }
 
   export() {
    this.api.exportDataAsCsv();
+  }
+  getZoneName(id){
+    for(const heart of this.diveHearts){
+      if (heart.id === id)
+        return heart.name;
+    }
+    return "";
   }
   onChange(value) {
     if (value === 'dives')
@@ -47,6 +59,7 @@ export class ExportComponent implements OnInit {
       {headerName: 'Id', field: 'id', checkboxSelection: true },
       {headerName: 'date de plongée', field: 'divingDate'},
       {headerName: 'site de plongée', field: 'dive_site' },
+      {headerName: 'Zone', field: 'dive_heart' },
       {headerName: 'Avec structure', field: 'shop'},
       {headerName: "Horaires", field: 'times'},
       {headerName: 'Utilisateur', field: 'user'},
@@ -67,6 +80,7 @@ export class ExportComponent implements OnInit {
           id: dive.id,
           divingDate: new Date(dive.divingDate).toLocaleDateString('fr-FR', this.date_options),
           dive_site: dive.dive_site.name,
+          dive_heart: this.getZoneName(dive.dive_site.heart_id),
           shop: dive.shop ? dive.shop.firstname + ' ' + dive.shop.lastname : "",
           times: dive.times[0][0] + ' ' + dive.times[0][1],
           user: dive.user.lastname + ' ' + dive.user.firstname,
@@ -93,6 +107,7 @@ export class ExportComponent implements OnInit {
       {headerName: 'Commentaire', field: 'review'},
       {headerName: 'Catégorie', field: 'category'},
       {headerName: 'Email', field: 'email'},
+      {headerName: 'Nombre de plongées', field: 'nbr_dives'},
       {headerName: 'Addresse', field: 'address'},
       /*{headerName: 'Bateaux', field: 'boats'},*/
       {headerName: 'Infractions', field: 'offenses'}
@@ -118,6 +133,7 @@ export class ExportComponent implements OnInit {
           email: user.email,
           status: user.status,
           address: user.address,
+          nbr_dives: user.nbr_dives,
           offenses: user.offenses.length > 0 ? new Date(user.offenses[0].start_at).toLocaleDateString('fr-FR', this.date_options)
             + ' - '+ new Date(user.offenses[0].end_at).toLocaleDateString('fr-FR', this.date_options):''
 

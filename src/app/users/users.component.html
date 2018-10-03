@@ -3,10 +3,11 @@
   <div class="col">
     <ul class="list-inline">
       <li class="list-inline-item"><button (click)="blockUser()" class="btn btn-warning">Bloquer</button></li>
+      <li class="list-inline-item"><button (click)="adminUser()" class="btn btn-warning">Admin</button></li>
       <li class="list-inline-item"><button (click)="unblockUsers()" class="btn btn-success">Débloquer</button></li>
       <li class="list-inline-item"><button (click)="deleteUsers()" class="btn btn-danger">Supprimer</button></li>
       <li class="list-inline-item"><button (click)="openOffense()" class="btn btn-warning">Infraction</button></li>
-      <li class="list-inline-item"><button (click)="exporter()" class="btn btn-info">Exporter</button></li>
+      <!--<li class="list-inline-item"><button (click)="exporter()" class="btn btn-info">Exporter</button></li>-->
     </ul>
   </div>
   <div class="col text-right">
@@ -50,5 +51,5 @@
 >
 </ag-grid-angular>
 <h5>Bateaux</h5>
-<p>sélectionner un utlisateur pour afficher ces bateaux</p>
+<p>Sélectionner un utlisateur pour afficher ses bateaux</p>
 <app-boats [boats]="boats" ></app-boats>

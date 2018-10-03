@@ -48,6 +48,7 @@ export class UsersComponent implements OnInit {
           return '<span class="rag-element">' + params.value + '</span>';
         }
       },
+      {headerName: 'Role', field: 'role' },
       {headerName: 'Nom', field: 'lastname' },
       {headerName: 'Prénom', field: 'firstname'},
       {headerName: "Date d'inscription", field: 'created_at'},
@@ -113,7 +114,7 @@ export class UsersComponent implements OnInit {
   blockUser() {
     const dialog = this.dialog.open(DialogComponent, {
       width: '500px',
-      data: { msg: 'voulez-vous bloquer les utilisateurs sélectionnés', cnfBtn: 'bloquer', cnlBtn: 'Annuler' }
+      data: { msg: 'voulez-vous bloquer les utilisateurs sélectionnés', cnfBtn: 'Bloquer', cnlBtn: 'Annuler' }
     });
 
     dialog.afterClosed().subscribe(result => {
@@ -126,6 +127,31 @@ export class UsersComponent implements OnInit {
         const users = [];
         for (const dataUser of selectedData)
           users.push({id: dataUser.id, status: 'blocked', boats: []});
+        this.userService.patch(users).then(data => {
+          console.log(data);
+          this.setUser();
+          dialogRef.close();
+
+        });
+      }
+    });
+  }
+  adminUser() {
+    const dialog = this.dialog.open(DialogComponent, {
+      width: '500px',
+      data: { msg: 'voulez-vous ajouter le status admin aux utilisateurs sélectionnés', cnfBtn: 'Confirmer', cnlBtn: 'Annuler' }
+    });
+
+    dialog.afterClosed().subscribe(result => {
+      if ( result ) {
+        const dialogRef = this.dialog.open(LoadingDialogComponent, {
+          disableClose: true
+        });
+        const selectedNodes = this.api.getSelectedNodes();
+        const selectedData = selectedNodes.map(node => node.data);
+        const users = [];
+        for (const dataUser of selectedData)
+          users.push({id: dataUser.id, role: 'admin', boats: []});
         this.userService.patch(users).then(data => {
           console.log(data);
           this.setUser();
@@ -193,6 +219,7 @@ export class UsersComponent implements OnInit {
           created_at: new Date(user.created_at).toLocaleDateString('fr-FR', this.date_options),
           review: user.review,
           email: user.email,
+          role: user.role,
           status: user.status,
           address: user.address,
           offenses: user.offenses.length > 0 ? new Date(user.offenses[0].start_at).toLocaleDateString('fr-FR', this.date_options)
@@ -219,6 +246,7 @@ export class UsersComponent implements OnInit {
         review: user.review,
         email: user.email,
         status: user.status,
+        role: user.role,
         address: user.address,
         offenses: user.offenses.length > 0 ? new Date(user.offenses[0].start_at).toLocaleDateString('fr-FR', this.date_options)
           + ' - '+ new Date(user.offenses[0].end_at).toLocaleDateString('fr-FR', this.date_options):''
@@ -241,6 +269,7 @@ export class UsersComponent implements OnInit {
           review: user.review,
           email: user.email,
           status: user.status,
+          role: user.role,
           address: user.address,
           boats: user.boats
         });
