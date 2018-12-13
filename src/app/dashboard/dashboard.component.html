@@ -1,5 +1,42 @@
 <div class="grid-container" *ngIf="permits && users && boats && diveHearts && groupedDiveSites">
   <h1 class="mat-h1">Tableau de bord</h1>
+  <mat-toolbar class="mat-toolbar mat-toolbar-single-row">Utilisateurs</mat-toolbar>
+  <div class="row text-center d-flex">
+    <div class="col-sm-3 placeholder">
+      <h4>{{users.length}}</h4>
+      <span class="text-muted">Plongeurs</span>
+    </div>
+    <div class="col-sm-3 placeholder">
+      <h4>{{getCntUsersByType(users, 'structure')}}</h4>
+      <span class="text-muted">Structures</span>
+    </div>
+    <div class="col-sm-3 placeholder">
+      <h4>{{getCntUsersByType(users, 'particulier')}}</h4>
+      <span class="text-muted">Particuliers</span>
+    </div>
+    <div class="col-sm-3 placeholder">
+      <h4>{{boats.length}}</h4>
+      <span class="text-muted">Bateaux</span>
+    </div>
+  </div>
+  <div class="row text-center d-flex">
+    <div class="col-sm-3 placeholder">
+      <h4>{{permits.length}}</h4>
+      <span class="text-muted">Signataires</span>
+    </div>
+    <div class="col-sm-3 placeholder">
+      <h4>{{getCntPermit('structure')}}</h4>
+      <span class="text-muted">Structures</span>
+    </div>
+    <div class="col-sm-3 placeholder">
+      <h4>{{getCntPermit('particulier')}}</h4>
+      <span class="text-muted">Particuliers</span>
+    </div>
+    <div class="col-sm-3 placeholder">
+      <h4>{{getCntPermit('boats')}}</h4>
+      <span class="text-muted">Bateaux</span>
+    </div>
+  </div>
   <div class="row text-center d-flex placeholder">
     <!--
   <div class="col-sm-6">
@@ -88,43 +125,7 @@
       <span class="text-muted">Par Coeur</span>
     </div>
   </div>
-  <mat-toolbar class="mat-toolbar mat-toolbar-single-row">Utilisateurs</mat-toolbar>
-  <div class="row text-center d-flex">
-    <div class="col-sm-3 placeholder">
-      <h4>{{users.length}}</h4>
-      <span class="text-muted">Plongeurs</span>
-    </div>
-    <div class="col-sm-3 placeholder">
-      <h4>{{getCntUsersByType(users, 'structure')}}</h4>
-      <span class="text-muted">Structures</span>
-    </div>
-    <div class="col-sm-3 placeholder">
-      <h4>{{getCntUsersByType(users, 'particulier')}}</h4>
-      <span class="text-muted">Particuliers</span>
-    </div>
-    <div class="col-sm-3 placeholder">
-      <h4>{{boats.length}}</h4>
-      <span class="text-muted">Bateaux</span>
-    </div>
-  </div>
-  <div class="row text-center d-flex">
-    <div class="col-sm-3 placeholder">
-      <h4>{{permits.length}}</h4>
-      <span class="text-muted">Signataires</span>
-    </div>
-    <div class="col-sm-3 placeholder">
-      <h4>{{getCntPermit('structure')}}</h4>
-      <span class="text-muted">Structures</span>
-    </div>
-    <div class="col-sm-3 placeholder">
-      <h4>{{getCntPermit('particulier')}}</h4>
-      <span class="text-muted">Particuliers</span>
-    </div>
-    <div class="col-sm-3 placeholder">
-      <h4>{{getCntPermit('boats')}}</h4>
-      <span class="text-muted">Bateaux</span>
-    </div>
-  </div>
+
   <!--
   <div class="row">
     <div class="col-md-12">

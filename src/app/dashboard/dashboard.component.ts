@@ -207,7 +207,7 @@ export class DashboardComponent {
         }
       ,
       tooltip: {
-        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        pointFormat: '{series.name}: <b>{point.y:.1f}</b>'
       }
       ,
       plotOptions: {
@@ -222,7 +222,7 @@ export class DashboardComponent {
               enabled: true,
               format
                 :
-                '<b>{point.name}</b>: {point.percentage:.1f} %'
+                '<b>{point.name}</b>: {point.y}'
             }
         }
       }
